@@ -17,7 +17,11 @@ class RequestHandler(BaseHTTPRequestHandler):
         self.wfile.write(resp_data)
 
 
-if __name__ == '__main__':
+def main():
     addr = ('', 8080)
     server = HTTPServer(addr, RequestHandler)
     server.serve_forever()
+
+
+if __name__ == '__main__':
+    main()

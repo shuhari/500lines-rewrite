@@ -167,7 +167,7 @@ class RequestDispatcher(BaseHTTPRequestHandler):
     def __init__(self, request, client_address, server):
         """Define middleware process pipeline"""
         self._middlewares = [
-            StaticFile(os.getcwd() + '/static'),
+            StaticFile(os.path.dirname(__file__) + '/static'),
             NotFound(),
         ]
         self._catchall = GenericError()
@@ -188,7 +188,11 @@ class RequestDispatcher(BaseHTTPRequestHandler):
             ctx.response.send()
 
 
-if __name__ == '__main__':
+def main():
     addr = ('', 8080)
     server = HTTPServer(addr, RequestDispatcher)
     server.serve_forever()
+
+
+if __name__ == '__main__':
+    main()
