@@ -3,6 +3,40 @@
 - <a href="#english-readme">Readme in English</a>
 - <a href="#chinese-readme">中文自述</a>
 
+## Status
+
+This project is working in progress.
+
+| Project | Status |
+|---------|--------|
+| editorial |  |
+| byterun |  |
+| spreadsheet |  |
+| contingent |  |
+| object model |  |
+| Image Filter app |  |
+| flow-shop |  |
+| same-origin-policy |  |
+| contingent |  |
+| dagoba |  |
+| Pedometer |  |
+| blockcode |  |
+| cluster |  |
+| Modeller |  |
+| same-origin-policy |  |
+| web-server | Done! |
+| crawler |  |
+| sampler |  |
+| static analysis |  |
+| event-web-framework |  |
+| ci |  |
+| ocr |  |
+| templating engine | Working... |
+| same-origin-policy |  |
+| data-store |  |
+| In-memory functional database |  |
+
+
 <a name="english-readme"/>
 
 ## Readme in English
