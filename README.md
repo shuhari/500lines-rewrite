@@ -13,6 +13,8 @@ This is rewritten of original project [500 Lines or Less](https://github.com/aos
 - Remove some outdated content (e.g CGI) and replace with newer mechanism such as HTTP processing pipeline
 - Written in a step-by-step manner, showing actual code for each step, so that the reader can understand it better
 - Some projects are developed in a test-driven (TDD) manner
+
+Project relatived articles are published at [My blog](https://shuhari.dev/blog/2020/05/500lines-rewrite-intro).
  
 ### How to Use
 
@@ -35,6 +37,8 @@ For projects that written in Python: open `main.py`, uncomment the Corresponding
 - 去掉部分过时的内容（如 CGI），添加较新的方式如 HTTP 处理管线
 - 用循序渐进的方式编写代码，展示每个具体步骤，让读者能够更好地理解
 - 部分项目采用测试驱动（TDD）的方式开发。
+
+项目相关的介绍文章发布在 [我的博客](https://shuhari.dev/blog/2020/05/500lines-rewrite-intro).
  
 ### 如何使用
 
