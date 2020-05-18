@@ -1,4 +1,4 @@
-# 500lines-rewrite
+# 500 Line or Less (Rewritten)
 
 - <a href="#english-readme">Readme in English</a>
 - <a href="#chinese-readme">中文自述</a>
