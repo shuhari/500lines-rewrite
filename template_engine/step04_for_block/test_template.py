@@ -49,15 +49,15 @@ class TokenizerTest(unittest.TestCase):
 
 
 class TemplateTest(unittest.TestCase):
-    def render(self, text: str, ctx: dict) -> str:
+    def render(self, text: str, ctx: dict, dump: bool = False) -> str:
         engine = TemplateEngine()
         engine.register_filter('upper', lambda x: x.upper())
         engine.register_filter('strip', lambda x: x.strip())
-        template = engine.create(text)
+        template = engine.create(text, dump=dump)
         return template.render(ctx)
 
-    def assert_render(self, text: str, ctx: dict, expected: str):
-        rendered = self.render(text, ctx)
+    def assert_render(self, text: str, ctx: dict, expected: str, dump: bool = False):
+        rendered = self.render(text, ctx, dump=dump)
         self.assertEqual(expected, rendered)
 
     def test_simple(self):
@@ -111,12 +111,17 @@ class TemplateTest(unittest.TestCase):
     def test_comment(self):
         self.assert_render("Hello.{# This is a comment. #}",
                            {},
-                           "Hello.")
+                           "Hello.", dump=True)
 
     def test_comment_with_variable(self):
         self.assert_render("Hello, {# This is a comment. #}{{name}}!",
                            {"name": "Alice"},
                            "Hello, Alice!")
+
+    def test_render_for_loop(self):
+        self.assert_render("{% for msg in messages %}Item {{msg}}!{% endfor %}",
+                           {"messages": ["a", "b", "c"]},
+                           "Item a!Item b!Item c!")
 
 
 def main():
