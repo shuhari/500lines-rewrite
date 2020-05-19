@@ -47,21 +47,28 @@ class Expr(Code):
 
 
 class Tokenizer:
+    """Parse template text to tokens"""
     def tokenize(self, text: str) -> typing.List[Code]:
-        parts = re.split(r'({{.*?}})', text)
-        return [self.create_code(x) for x in parts]
+        segments = re.split(r'({{.*?}})', text)
+        return [self.create_code(x) for x in segments]
 
     def create_code(self, text: str) -> Code:
+        """Create code item from source text."""
         if text.startswith("{{") and text.endswith("}}"):
             return Expr(text[2:-2].strip())
         return Text(text)
 
 
 class Template:
+    """Render template source with context to text result."""
     def __init__(self, text: str):
-        tokenizers = Tokenizer().tokenize(text)
+        self.generate_code(text)
+
+    def generate_code(self, source: str):
+        tokenizers = Tokenizer().tokenize(source)
         code_lines = [x.to_code() for x in tokenizers]
-        self._code = '\n'.join(code_lines)
+        code = '\n'.join(code_lines)
+        self._code = compile(code, '', 'exec')
 
     def render(self, ctx: dict = None) -> str:
         exec_ctx = (ctx or {}).copy()

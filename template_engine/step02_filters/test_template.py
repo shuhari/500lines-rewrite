@@ -1,4 +1,3 @@
-import os
 import unittest
 
 from .template import *
@@ -8,7 +7,7 @@ class TokenizerTest(unittest.TestCase):
     def setUp(self):
         self.tokenizer = Tokenizer()
 
-    def test_single_variable(self):
+    def test_tokenize_single_variable(self):
         parts = self.tokenizer.tokenize("Hello, {{name}}!")
         self.assertEqual(parts, [
             Text("Hello, "),
@@ -16,10 +15,20 @@ class TokenizerTest(unittest.TestCase):
             Text("!")
         ])
 
-    def test_extract_filters(self):
-        self.assertEqual(("name", []), self.tokenizer.extract_filters("name"))
-        self.assertEqual(("name", ["upper"]), self.tokenizer.extract_filters("name | upper"))
-        self.assertEqual(("name", ["upper", "strip"]), self.tokenizer.extract_filters("name | upper | strip"))
+    def test_tokenize_multi_variables(self):
+        parts = self.tokenizer.tokenize("Hello, {{name}}, Now is {{year}}!")
+        self.assertEqual(parts, [
+            Text("Hello, "),
+            Expr("name"),
+            Text(", Now is "),
+            Expr("year"),
+            Text("!"),
+        ])
+
+    def test_parse_repr(self):
+        self.assertEqual(("name", []), self.tokenizer.parse_expr("name"))
+        self.assertEqual(("name", ["upper"]), self.tokenizer.parse_expr("name | upper"))
+        self.assertEqual(("name", ["upper", "strip"]), self.tokenizer.parse_expr("name | upper | strip"))
 
 
 class TemplateTest(unittest.TestCase):
@@ -77,45 +86,14 @@ class TemplateTest(unittest.TestCase):
                            {"name": "  Alice  "},
                            "Hello, ALICE!")
 
-
-#     def test_speed(self):
-#         import time
-#
-#         times = 100000
-#
-#         def normal():
-#             text = """\
-# output.append("Hello, ")
-# output.append(name)
-# output.append("!")"""
-#             ctx = {"output": [], "name": "user"}
-#             exec(text, ctx)
-#
-#         def optimized():
-#             text = """\
-# ap = output.append
-# ap("Hello, ")
-# ap(name)
-# ap("!")"""
-#             ctx = {"output": [], "name": "user"}
-#             exec(text, ctx)
-#
-#         def test(fn):
-#             start = time.perf_counter()
-#             for i in range(times):
-#                 fn()
-#             elapsed = time.perf_counter() - start
-#             print(f"{fn.__name__} used {elapsed}")
-#
-#         test(optimized)
-#         test(normal)
+    def test_render_multi_templates(self):
+        source = "Hello, {{name}}!"
+        self.assert_render(source, {"name": "Alice"}, "Hello, Alice!")
+        self.assert_render(source, {"name": "Bob"}, "Hello, Bob!")
 
 
 def main():
-    test_dir = os.path.dirname(__file__)
-    top_dir = os.path.normpath(os.path.join(test_dir, '../..'))
-    suite = unittest.TestLoader().discover(start_dir=test_dir, top_level_dir=top_dir)
-    unittest.TextTestRunner().run(suite)
+    unittest.main(__name__)
 
 
 if __name__ == '__main__':

@@ -22,8 +22,7 @@ class TemplateTest(unittest.TestCase):
 
 
 def main():
-    suite = unittest.TestLoader().loadTestsFromTestCase(TemplateTest)
-    unittest.TextTestRunner().run(suite)
+    unittest.main(__name__)
 
 
 if __name__ == '__main__':
