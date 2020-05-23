@@ -17,11 +17,11 @@ Template Engine example.
 # Run Step 00: Simple Case
 # from template_engine.step00_plain_text.test_template import main; main()
 # Run Step 01: Variables
-from template_engine.step01_expr.test_template import main; main()
+# from template_engine.step01_expr.test_template import main; main()
 # Run Step 02: Filters
-# from template_engine.step02_filters.test_template import main; main()
+# from template_engine.step02_filter.test_template import main; main()
 # Run Step 03: Comments
-# from template_engine.step03_comment.test_template import main; main()
+from template_engine.step03_comment.test_template import main; main()
 # Run Step 04: For Block
 # from template_engine.step04_for_block.test_template import main; main()
 # Run Step 04: If Block
