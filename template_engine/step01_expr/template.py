@@ -13,6 +13,9 @@ class Token:
     def generate_code(self) -> str:
         raise NotImplementedError()
 
+    def __eq__(self, other):
+        return type(self) == type(other) and repr(self) == repr(other)
+
 
 class Text(Token):
     def __init__(self, content: str = None):
@@ -27,9 +30,6 @@ class Text(Token):
     def __repr__(self):
         return f"Text({self._content})"
 
-    def __eq__(self, other):
-        return type(self) == type(other) and self._content == other._content
-
 
 class Expr(Token):
     def __init__(self, varname: str = None):
@@ -43,9 +43,6 @@ class Expr(Token):
 
     def __repr__(self):
         return f"Expr({self._varname})"
-
-    def __eq__(self, other):
-        return type(self) == type(other) and self._varname == other._varname
 
 
 def create_token(text: str) -> Token:
@@ -87,4 +84,3 @@ class Template:
         exec_ctx[OUTPUT_VAR] = output
         exec(self._code, None, exec_ctx)
         return "".join(output)
-        return self._text

@@ -1,7 +1,7 @@
 # 500 Line or Less (Rewritten)
 
-- <a href="#english-readme">Readme in English</a>
-- <a href="#chinese-readme">中文自述</a>
+- [Readme in English](#english-readme)
+- [中文自述](#chinese-readme>)
 
 ## Status
 
@@ -24,14 +24,14 @@ This project is working in progress.
 | cluster |  |
 | Modeller |  |
 | same-origin-policy |  |
-| web-server | Done! |
+| web-server | Done |
 | crawler |  |
 | sampler |  |
 | static analysis |  |
 | event-web-framework |  |
 | ci |  |
 | ocr |  |
-| templating engine | Working... |
+| templating engine | Done |
 | same-origin-policy |  |
 | data-store |  |
 | In-memory functional database |  |
@@ -54,7 +54,7 @@ Project relatived articles are published at [My blog](https://shuhari.dev/blog/2
 
 To run the program code, you need
 
-- Python3. Any version higher than Python3.6 should work (but not verified). The development environment is Python3.8.
+- Python3. Any version higher than Python3.6 should work (but not verified). The development environment is Python3.7.
 
 Code of each project is in a separated directory, naming after [original project](https://github.com/aosabook/500lines). But each step has also its own sub-directory.
 
@@ -78,7 +78,7 @@ For projects that written in Python: open `main.py`, uncomment the Corresponding
 
 要运行程序代码，需要
 
-- Python3。理论上任何高于 Python3.6 的版本均可（但未验证）。开发环境是 Python3.8
+- Python3。理论上任何高于 Python3.6 的版本均可（但未验证）。实际开发环境是 Python3.7
 
 各个项目分别放在不同的目录下，命名方式与 [原项目](https://github.com/aosabook/500lines) 相同，但每个步骤使用独立的目录。
 

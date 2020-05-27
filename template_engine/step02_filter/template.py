@@ -51,20 +51,6 @@ class Expr(Token):
         return f"Expr({self._varname})"
 
 
-class Comment(Token):
-    def __init__(self, content: str = None):
-        self._content = content
-
-    def parse(self, content: str):
-        self._content = content
-
-    def __repr__(self):
-        return f"Comment({self._content})"
-
-    def generate_code(self) -> str:
-        return None
-
-
 def extract_last_filter(text: str) -> (str, str):
     """
     Extract last filter from expression like 'var | filter'.
@@ -98,8 +84,6 @@ def create_token(text: str) -> Token:
     """Create token from source code fragment."""
     if text.startswith("{{") and text.endswith("}}"):
         token, content = Expr(), text[2:-2].strip()
-    elif text.startswith("{#") and text.endswith("#}"):
-        token, content = Comment(), text[2:-2].strip()
     else:
         token, content = Text(), text
     token.parse(content)
@@ -139,7 +123,6 @@ class Template:
         exec_ctx[OUTPUT_VAR] = output
         exec(self._code, self._global_vars, exec_ctx)
         return "".join(output)
-        return self._text
 
 
 class TemplateEngine:

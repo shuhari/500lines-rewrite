@@ -78,6 +78,9 @@ class Token:
     def generate_code(self, builder: CodeBuilder):
         raise NotImplementedError()
 
+    def __eq__(self, other):
+        return type(self) == type(other) and repr(self) == repr(other)
+
 
 class Text(Token):
     def __init__(self, content: str = None):
@@ -91,9 +94,6 @@ class Text(Token):
 
     def __repr__(self):
         return f"Text({self._content})"
-
-    def __eq__(self, other):
-        return type(self) == type(other) and self._content == other._content
 
 
 class Expr(Token):
@@ -115,11 +115,6 @@ class Expr(Token):
             return f"Expr({self._varname} | {' | '.join(self._filters)})"
         return f"Expr({self._varname})"
 
-    def __eq__(self, other):
-        return type(self) == type(other) and \
-               self._varname == other._varname and \
-               self._filters == other._filters
-
 
 class Comment(Token):
     def __init__(self, content: str = None):
@@ -130,10 +125,6 @@ class Comment(Token):
 
     def __repr__(self):
         return f"Comment({self._content})"
-
-    def __eq__(self, other):
-        return type(self) == type(other) and \
-            self._content == other._content
 
     def generate_code(self, builder: CodeBuilder):
         pass
@@ -155,11 +146,6 @@ class For(Token):
     def __repr__(self):
         return f"For({self._varname} in {self._target})"
 
-    def __eq__(self, other):
-        return type(self) == type(other) and \
-            self._varname == other._varname and \
-            self._target == other._target
-
     def generate_code(self, builder: CodeBuilder):
         builder.add_code(f"for {INDEX_VAR}, {self._varname} in enumerate({self._target}):")
         builder.indent()
@@ -173,9 +159,6 @@ class EndFor(Token):
 
     def __repr__(self):
         return 'EndFor'
-
-    def __eq__(self, other):
-        return type(self) == type(other)
 
     def generate_code(self, builder: CodeBuilder):
         builder.unindent()
@@ -217,14 +200,14 @@ def create_control_token(text: str) -> Token:
     m = re.match(r'^(\w+)', text)
     if not m:
         raise SyntaxError(f'Unknown control token: {text}')
-    prefix = m.group(1)
+    keyword = m.group(1)
     token_types = {
         'for': For,
         'endfor': EndFor,
     }
-    if prefix not in token_types:
+    if keyword not in token_types:
         raise SyntaxError(f'Unknown control token: {text}')
-    return token_types[prefix]()
+    return token_types[keyword]()
 
 
 def create_token(text: str) -> Token:

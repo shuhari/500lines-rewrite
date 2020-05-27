@@ -79,6 +79,9 @@ class Token:
     def generate_code(self, builder: CodeBuilder):
         raise NotImplementedError()
 
+    def __eq__(self, other):
+        return type(self) == type(other) and repr(self) == repr(other)
+
 
 class Text(Token):
     def __init__(self, content: str = None):
@@ -92,9 +95,6 @@ class Text(Token):
 
     def __repr__(self):
         return f"Text({self._content})"
-
-    def __eq__(self, other):
-        return type(self) == type(other) and self._content == other._content
 
 
 class Expr(Token):
@@ -116,11 +116,6 @@ class Expr(Token):
             return f"Expr({self._varname} | {' | '.join(self._filters)})"
         return f"Expr({self._varname})"
 
-    def __eq__(self, other):
-        return type(self) == type(other) and \
-               self._varname == other._varname and \
-               self._filters == other._filters
-
 
 class Comment(Token):
     def __init__(self, content: str = None):
@@ -131,10 +126,6 @@ class Comment(Token):
 
     def __repr__(self):
         return f"Comment({self._content})"
-
-    def __eq__(self, other):
-        return type(self) == type(other) and \
-            self._content == other._content
 
     def generate_code(self, builder: CodeBuilder):
         pass
@@ -155,11 +146,6 @@ class For(Token):
 
     def __repr__(self):
         return f"For({self._varname} in {self._target})"
-
-    def __eq__(self, other):
-        return type(self) == type(other) and \
-            self._varname == other._varname and \
-            self._target == other._target
 
     def generate_code(self, builder: CodeBuilder):
         builder.add_code(f"for {INDEX_VAR}, {self._varname} in enumerate({self._target}):")
@@ -183,10 +169,6 @@ class If(Token):
     def __repr__(self):
         return f"If({self._repr})"
 
-    def __eq__(self, other):
-        return type(self) == type(other) and \
-            self._repr == other._repr
-
     def generate_code(self, builder: CodeBuilder):
         builder.add_code(f"if {self._repr}:")
         builder.indent()
@@ -206,10 +188,6 @@ class ElseIf(Token):
     def __repr__(self):
         return f"ElseIf({self._repr})"
 
-    def __eq__(self, other):
-        return type(self) == type(other) and \
-            self._repr == other._repr
-
     def generate_code(self, builder: CodeBuilder):
         builder.unindent()
         builder.add_code(f"elif {self._repr}:")
@@ -222,9 +200,6 @@ class Else(Token):
 
     def parse(self, content: str):
         pass
-
-    def __eq__(self, other):
-        return type(self) == type(other)
 
     def generate_code(self, builder: CodeBuilder):
         builder.unindent()
@@ -239,9 +214,6 @@ class EndFor(Token):
     def __repr__(self):
         return 'EndFor'
 
-    def __eq__(self, other):
-        return type(self) == type(other)
-
     def generate_code(self, builder: CodeBuilder):
         builder.end_block(For)
 
@@ -252,9 +224,6 @@ class EndIf(Token):
 
     def __repr__(self):
         return 'EndIf'
-
-    def __eq__(self, other):
-        return type(self) == type(other)
 
     def generate_code(self, builder: CodeBuilder):
         builder.end_block(If)
@@ -295,7 +264,7 @@ def create_control_token(text: str) -> Token:
     m = re.match(r'^(\w+)', text)
     if not m:
         raise SyntaxError(f'Unknown control token: {text}')
-    prefix = m.group(1)
+    keywords = m.group(1)
     token_types = {
         'for': For,
         'endfor': EndFor,
@@ -304,9 +273,9 @@ def create_control_token(text: str) -> Token:
         'else': Else,
         'endif': EndIf,
     }
-    if prefix not in token_types:
+    if keywords not in token_types:
         raise SyntaxError(f'Unknown control token: {text}')
-    return token_types[prefix]()
+    return token_types[keywords]()
 
 
 def create_token(text: str) -> Token:

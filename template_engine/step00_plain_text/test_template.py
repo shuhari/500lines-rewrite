@@ -14,7 +14,7 @@ class TemplateTest(unittest.TestCase):
             '<h1>This is a html message.</h1>',
             'This is a multi line message\nThis is line 2 of the message',
         ]:
-            self.render(text, None, text)
+            self.render(text, {}, text)
 
 
 def main():
