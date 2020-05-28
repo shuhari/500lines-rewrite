@@ -93,6 +93,12 @@ class TemplateTest(unittest.TestCase):
                     "Hello, A!",
                     filters={"first": first})
 
+    def test_filter_not_defined(self):
+        with self.assertRaises(NameError):
+            self.render("Hello, {{ name | upper | first }}!",
+                        {"name": "alice"},
+                        "Hello, A!")
+
 
 def main():
     unittest.main(__name__)
