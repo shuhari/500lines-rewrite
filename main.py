@@ -30,4 +30,11 @@ Template Engine example.
 # from template_engine.step06_perf_test.perf_test import main; main()
 
 
+"""
+Continuous Integration example.
+"""
+# To run app:
+# from ci import main; main()
+# To run test:
+# from ci.tests.artifact_test import main; main()
 

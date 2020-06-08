@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Continuous Integration Server</title>
+</head>
+<body>
+    <h1 style="text-align: center">Continuous Integration Server</h1>
+    {% for project in projects %}
+        <h2 style="text-align: center">Project: {{ project.id }}</h2>
+        {% if project.build_results %}
+            {% set result = project.build_results[-1] %}
+            <div style="background: {{ 'lightgreen' if result.success else 'lightred' }}">
+                <h3>Build: {{ result.start_time }}-{{ result.end_time }}</h3>
+                {% for task_result in result.tasks %}
+                    <h4>Task: {{ task_result.type }}</h4>
+                    <div>
+                        {{ render_task_result(task_result) | safe }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endfor %}
+</body>
+</html>

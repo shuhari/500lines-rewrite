@@ -1,0 +1,17 @@
+{
+  "projects": [
+    {
+      "id": "project1",
+      "url": "$HOME/test-ci/repo",
+      "tasks": [
+        { "type": "pip", "file": "requirements.txt" },
+        { "type": "pylint" },
+        { "type": "unittest", "params": "discover -s tests -p test*.py" }
+      ]
+    }
+  ],
+  "agents": [
+    { "id": "agent1", "workDir": "$HOME/test-ci/agent1" },
+    { "id": "agent2", "workDir": "$HOME/test-ci/agent2" }
+  ]
+}
