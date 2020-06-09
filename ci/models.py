@@ -8,26 +8,26 @@ class Project:
         self.pending_commit = None
         self.processing = False
         self.build_results = []
-        self.work_dir = None
-        self.venv_name = None
 
     @property
     def id(self) -> str:
         return self.config["id"]
 
     def end_build(self, result):
-        self.build_results.append(result)
+        """Update when build finished"""
         self.current_commit = self.pending_commit
         self.pending_commit = None
         self.processing = False
+        self.build_results.append(result)
 
 
 class BuildResult:
     def __init__(self):
         self.project_id = None
+        self.commit_id = None
+        self.agent_id = None
         self.success = True
         self.error = None
-        self.agent_id = None
         self.start_time = datetime.now()
         self.end_time = None
         self.tasks = []
@@ -39,10 +39,11 @@ class BuildResult:
     def finish(self):
         self.end_time = datetime.now()
 
-    def dump(self):
-        print(f"Build result: {self.success}, {self.error}, {self.agent_id}, {self.start_time}, {self.end_time}")
-        for task in self.tasks:
-            task.dump()
+    def __str__(self):
+        return f"BuildResult(project={self.project_id}, commit={self.commit_id})"
+
+    def time_range(self) -> str:
+        return f"{self.start_time.strftime('%H:%M:%S')} - {self.end_time.strftime('%H:%M:%S')}"
 
 
 class TaskResult:
@@ -51,9 +52,6 @@ class TaskResult:
         self.type = type
         self.format = fmt
         self.content = content
-
-    def dump(self):
-        print(f"    ====Task({self.success}, {self.format}, content len: {len(self.content)}====)")
 
 
 class Database:
@@ -65,3 +63,20 @@ class Database:
             if project.id == project_id:
                 return project
         return None
+
+
+class LintIssue:
+    def __init__(self, filename, line, column, name, description):
+        self.filename = filename
+        self.line = line
+        self.column = column
+        self.name = name
+        self.description = description
+
+
+class UnitTestResult:
+    def __init__(self):
+        self.pass_count = 0
+        self.fail_count = 0
+        self.error_count = 0
+

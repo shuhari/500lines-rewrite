@@ -1,29 +1,25 @@
+import logging
 import re
 from threading import Thread
 
 from flask import Flask, render_template
 
-from .models import Database, TaskResult
+from .models import Database, TaskResult, LintIssue, UnitTestResult
 
 
 class ArtifactHandler:
+    """Handle artifact from build result"""
     def parse(self, text: str) -> object:
+        """parse build output to view model"""
         raise NotImplementedError()
 
     def render(self, model: object) -> str:
+        """Render view model to html"""
         raise NotImplementedError()
 
 
-class LintIssue:
-    def __init__(self, filename, line, column, name, description):
-        self.filename = filename
-        self.line = line
-        self.column = column
-        self.name = name
-        self.description = description
-
-
 class PyLintHandler(ArtifactHandler):
+    """Handle pylint result"""
     def parse(self, text: str) -> object:
         result = [self.extract_issue(x) for x in text.splitlines()]
         result = [x for x in result if x]
@@ -49,14 +45,8 @@ class PyLintHandler(ArtifactHandler):
         return f"<table border=1>{''.join(rows)}</table>"
 
 
-class UnitTestResult:
-    def __init__(self):
-        self.pass_count = 0
-        self.fail_count = 0
-        self.error_count = 0
-
-
 class UnitTestHandler(ArtifactHandler):
+    """Handle unittest result"""
     def parse(self, text: str) -> object:
         result = UnitTestResult()
         first_line = text.splitlines()[0]
@@ -74,6 +64,7 @@ class UnitTestHandler(ArtifactHandler):
 
 
 def render_task_result(result: TaskResult) -> str:
+    """Render task result to html"""
     handlers = {
         'pylint': PyLintHandler,
         'unittest': UnitTestHandler,
@@ -85,6 +76,7 @@ def render_task_result(result: TaskResult) -> str:
 
 
 class WebServer(Thread):
+    """start flask server to show build output as html"""
     def __init__(self, db: Database):
         super().__init__()
         self.db = db
@@ -97,4 +89,5 @@ class WebServer(Thread):
             return render_template('index.html',
                                    projects=self.db.projects)
         app.jinja_env.globals['render_task_result'] = render_task_result
-        app.run(port=5000)
+        logging.getLogger('werkzeug').setLevel(logging.ERROR)
+        app.run()

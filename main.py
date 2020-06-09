@@ -34,7 +34,7 @@ Template Engine example.
 Continuous Integration example.
 """
 # To run app:
-# from ci import main; main()
+from ci import main; main()
 # To run test:
 # from ci.tests.artifact_test import main; main()
 

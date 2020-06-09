@@ -29,7 +29,7 @@ This project is working in progress.
 | sampler |  |
 | static analysis |  |
 | event-web-framework |  |
-| ci |  |
+| ci | Working... |
 | ocr |  |
 | templating engine | Done |
 | same-origin-policy |  |

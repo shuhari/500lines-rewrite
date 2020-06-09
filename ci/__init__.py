@@ -18,5 +18,6 @@ def main():
     db = Database(config)
     master = Master(config, db)
     master.start()
-    WebServer(db).start()
+    web_server = WebServer(db)
+    web_server.start()
 

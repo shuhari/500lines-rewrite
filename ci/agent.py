@@ -1,7 +1,7 @@
-import io
 import os
 import shutil
 import subprocess
+import traceback
 import uuid
 from threading import Thread
 import multiprocessing as mp
@@ -10,88 +10,89 @@ from .models import Project, BuildResult, TaskResult
 from . import vcs
 
 
-class TaskRunner:
-    def run(self, parent, config: dict, workDir: str):
-        self.parent = parent
-        self.config = config
-        self.workDir = workDir
-        self.result = TaskResult()
-        self.run_core()
-
-    def run_core(self):
-        raise NotImplementedError()
-
-
-def run_external(cmd: str, work_dir: str):
+def run_external(cmd: str, work_dir: str) -> str:
+    """Run external program, return output to stdout"""
     p = subprocess.run(cmd, shell=True, cwd=work_dir, capture_output=True)
     if p.stdout:
         return p.stdout.decode('utf8')
     return None
 
 
-def init_venv(project: Project):
-    project.venv_name = 'venv'
-    cmd = f"python3 -m venv {project.venv_name}"
-    run_external(cmd, project.work_dir)
+def run_pip(builder, config: dict) -> TaskResult:
+    cmd = f"{builder.venv_name}/bin/pip install -r {config['file']}"
+    run_external(cmd, builder.work_dir)
+    return None
 
 
-def run_pip(project: Project, config: dict) -> TaskResult:
-    args = f"{project.venv_name}/bin/pip install -r {config['file']}"
-    run_external(args, project.work_dir)
-
-
-def run_pylint(project: Project, config: dict) -> TaskResult:
-    args = f"venv/bin/pylint *.py"
-    output = run_external(args, project.work_dir)
+def run_pylint(builder, config: dict) -> TaskResult:
+    args = f"{builder.venv_name}/bin/pylint *.py"
+    output = run_external(args, builder.work_dir)
     return TaskResult('pylint', output)
 
 
-def run_unittest(project: Project, config: dict) -> TaskResult:
-    args = f"venv/bin/python -m unittest {config['params']} 2>&1"
-    output = run_external(args, project.work_dir)
+def run_unittest(builder, config: dict) -> TaskResult:
+    args = f"{builder.venv_name}/bin/python -m unittest {config['params']} 2>&1"
+    output = run_external(args, builder.work_dir)
     return TaskResult('unittest', output)
 
 
-class ProjectRunner(Thread):
+class ProjectBuilder(Thread):
+    """Build single project in a separated thread"""
     def __init__(self, agent, project: Project):
         super().__init__()
         self.agent = agent
         self.project = project
         self.result = BuildResult()
         self.result.project_id = project.id
+        self.result.commit_id = project.pending_commit
         self.result.agent_id = agent.id
+        self.work_dir = None
+        self.venv_name = 'venv'
 
     def run(self):
-        clone_dir = os.path.join(self.agent.workDir(), uuid.uuid4().hex)
+        """
+        Build steps:
+
+        1. Clone project in a separated directory
+        2. Use venv to create virtual environment
+        3. Run each task in config
+        4. Cleanup and save result
+        """
+        self.work_dir = os.path.join(self.agent.workDir(), uuid.uuid4().hex)
         try:
-            vcs.clone(self.project.config["url"], clone_dir, self.project.pending_commit)
-            self.project.work_dir = clone_dir
-            init_venv(self.project)
+            vcs.clone(self.project.config["url"], self.work_dir, commit_id=self.project.pending_commit)
+            self.init_venv()
             for task_config in self.project.config["tasks"]:
-                task_runner = self.get_task_runner(task_config["type"])
-                task_result = task_runner(self.project, task_config)
-                if task_result:
-                    task_result.type = task_config['type']
-                    self.result.tasks.append(task_result)
+                self.run_task(task_config)
         except Exception as e:
             self.result.fail(e)
-            import traceback; traceback.print_exc()
+            traceback.print_exc()
         finally:
-            shutil.rmtree(clone_dir)
+            shutil.rmtree(self.work_dir)
             self.result.finish()
             self.agent.result_queue.put(self.result)
 
-    def get_task_runner(self, task_type: str):
-        registered_runners = {
+    def init_venv(self):
+        cmd = f"python3 -m venv {self.venv_name}"
+        run_external(cmd, self.work_dir)
+
+    def run_task(self, config: dict):
+        task_type = config['type']
+        runner_type = {
             'pip': run_pip,
             'pylint': run_pylint,
             'unittest': run_unittest,
         }
-        assert task_type in registered_runners, f"Unsupported task type: {task_type}"
-        return registered_runners[task_type]
+        assert task_type in runner_type, f"Unsupported task type: {task_type}"
+        runner = runner_type[task_type]
+        result = runner(self, config)
+        if result:
+            result.type = task_type
+            self.result.tasks.append(result)
 
 
 class Agent:
+    """Build agent"""
     def __init__(self, config):
         self.config = config
         self.project_queue = mp.Queue()
@@ -104,8 +105,14 @@ class Agent:
     def workDir(self) -> str:
         return os.path.expandvars(self.config["workDir"])
 
+    def schedule(self, project: Project):
+        """Put project in build queue"""
+        project.processing = True
+        self.project_queue.put(project)
+        print(f"Project {project.id} with commit {project.pending_commit} scheduled to {self.id}")
+
     def __call__(self, *args, **kwargs):
         while True:
             project = self.project_queue.get()
-            runner = ProjectRunner(self, project)
-            runner.start()
+            builder = ProjectBuilder(self, project)
+            builder.start()
