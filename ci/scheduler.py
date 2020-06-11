@@ -9,7 +9,7 @@ from .agent import Agent
 from . import vcs
 
 
-class Master(Thread):
+class Scheduler(Thread):
     def __init__(self, config, db):
         super().__init__()
         self.config = config

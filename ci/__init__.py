@@ -2,7 +2,7 @@ import json
 import os
 
 from .models import Database
-from .master import Master
+from .scheduler import Scheduler
 from .webserver import WebServer
 
 
@@ -16,8 +16,8 @@ def read_config():
 def main():
     config = read_config()
     db = Database(config)
-    master = Master(config, db)
-    master.start()
+    scheduler = Scheduler(config, db)
+    scheduler.start()
     web_server = WebServer(db)
     web_server.start()
 
