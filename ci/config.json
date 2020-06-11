@@ -4,8 +4,8 @@
       "id": "project1",
       "url": "$HOME/test-ci/repo",
       "tasks": [
-        { "type": "pip", "file": "requirements.txt" },
-        { "type": "pylint" },
+        { "type": "venv", "name": "venv", "packages-file": "requirements.txt" },
+        { "type": "pylint", "pattern": "*.py" },
         { "type": "unittest", "params": "discover -s tests -p test*.py" }
       ]
     }

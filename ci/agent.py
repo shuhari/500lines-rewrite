@@ -10,29 +10,34 @@ from .models import Project, BuildResult, TaskResult
 from . import vcs
 
 
-def run_external(cmd: str, work_dir: str) -> str:
+def run_external(builder, cmd: str) -> str:
     """Run external program, return output to stdout"""
-    p = subprocess.run(cmd, shell=True, cwd=work_dir, capture_output=True)
+    p = subprocess.run(cmd,
+                       shell=True,
+                       cwd=builder.work_dir,
+                       capture_output=True)
     if p.stdout:
         return p.stdout.decode('utf8')
     return None
 
 
-def run_pip(builder, config: dict) -> TaskResult:
-    cmd = f"{builder.venv_name}/bin/pip install -r {config['file']}"
-    run_external(cmd, builder.work_dir)
+def run_venv(builder, config: dict) -> TaskResult:
+    venv_name, package_file = config["name"], config['packages-file']
+    builder.run_cmd(f"python3 -m venv {venv_name}")
+    builder.run_cmd(f"{venv_name}/bin/pip install -r {package_file}")
+    builder.venv_name = venv_name
     return None
 
 
 def run_pylint(builder, config: dict) -> TaskResult:
-    args = f"{builder.venv_name}/bin/pylint *.py"
-    output = run_external(args, builder.work_dir)
+    venv_name, pattern = builder.venv_name, config["pattern"]
+    output = builder.run_cmd(f"{venv_name}/bin/pylint {pattern}")
     return TaskResult('pylint', output)
 
 
 def run_unittest(builder, config: dict) -> TaskResult:
-    args = f"{builder.venv_name}/bin/python -m unittest {config['params']} 2>&1"
-    output = run_external(args, builder.work_dir)
+    venv_name, params = builder.venv_name, config["params"]
+    output = builder.run_cmd(f"{venv_name}/bin/python -m unittest {params} 2>&1")
     return TaskResult('unittest', output)
 
 
@@ -61,7 +66,6 @@ class ProjectBuilder(Thread):
         self.work_dir = os.path.join(self.agent.workDir(), uuid.uuid4().hex)
         try:
             vcs.clone(self.project.config["url"], self.work_dir, commit_id=self.project.pending_commit)
-            self.init_venv()
             for task_config in self.project.config["tasks"]:
                 self.run_task(task_config)
         except Exception as e:
@@ -72,14 +76,20 @@ class ProjectBuilder(Thread):
             self.result.finish()
             self.agent.result_queue.put(self.result)
 
-    def init_venv(self):
-        cmd = f"python3 -m venv {self.venv_name}"
-        run_external(cmd, self.work_dir)
+    def run_cmd(self, cmd: str) -> str:
+        """Run external program, return output to stdout"""
+        p = subprocess.run(cmd,
+                           shell=True,
+                           cwd=self.work_dir,
+                           capture_output=True)
+        if p.stdout:
+            return p.stdout.decode('utf8')
+        return None
 
     def run_task(self, config: dict):
         task_type = config['type']
         runner_type = {
-            'pip': run_pip,
+            'venv': run_venv,
             'pylint': run_pylint,
             'unittest': run_unittest,
         }
