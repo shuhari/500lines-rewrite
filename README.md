@@ -27,7 +27,7 @@ This project is working in progress.
 | web-server | Done |
 | crawler |  |
 | sampler |  |
-| static analysis |  |
+| static analysis | Done |
 | event-web-framework |  |
 | ci | Done |
 | ocr |  |
