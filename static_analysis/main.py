@@ -1,4 +1,5 @@
 import ast
+import os
 
 from models import AnalysisContext
 from visitors import LineLengthVisitor, ExceptionTypeVisitor, VariableUsageVisitor, PreferIsNotVisitor
@@ -47,7 +48,14 @@ if not name is None:
 """
 
 
-if __name__ == '__main__':
+def main():
+    # Change work directory to module folder
+    # to ensure dump files generated correctly
+    os.chdir(os.path.dirname(__file__))
     analyzer = CodeAnalyzer()
     analyzer.analysis('test.py', CODE)
     analyzer.print()
+
+
+if __name__ == '__main__':
+    main()

@@ -25,9 +25,9 @@ class AnalysisContext:
         self.filename = filename
         self.issues = []
 
-    def add_issue(self, node: ast.AST, code: str, message: str):
+    def add_issue(self, node: ast.AST, code: str, message: str, lineno: int = None):
         issue = CodeIssue(filename=self.filename,
-                          line=node.lineno,
+                          line=lineno or node.lineno,
                           column=node.col_offset,
                           code=code,
                           message=message)

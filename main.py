@@ -38,3 +38,7 @@ Continuous Integration example.
 # To run test:
 # from ci.tests.artifact_test import main; main()
 
+"""
+Static Analysis
+"""
+from static_analysis.main import main; main()

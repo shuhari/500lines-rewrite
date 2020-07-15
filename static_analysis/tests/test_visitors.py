@@ -11,7 +11,7 @@ class VisitorTestMixin:
 
     def run_visitor(self, code: str, xml_filename: str = None):
         """Execute visitor on ast node, dump result to file if specified"""
-        assert self.visitor_type, 'Visitor type not defined.'
+        self.assertIsNotNone(self.visitor_type, 'Visitor type not defined.')
         self.ctx = AnalysisContext('test.py')
         visitor = self.visitor_type(self.ctx)
         ast_node = ast.parse(code)
@@ -41,6 +41,18 @@ print('this is a very, very, very, very, very, very, very, very, very, very, ver
         """.strip()
         self.run_visitor(code, xml_filename='line-length.xml')
         self.assert_found_issue(2, 'W0001')
+
+    def test_visit_docstring(self):
+        code = """
+def fn():
+   '''
+   This is a very, very, very, very, very, very, very, very, very, very, very, very long doc string
+   The second line
+   '''
+   pass        
+        """.strip()
+        self.run_visitor(code, xml_filename='doc-string-length.xml')
+        self.assert_found_issue(3, 'W0001')
 
 
 class ExceptionTypeVisitorTest(TestCase, VisitorTestMixin):
@@ -79,17 +91,27 @@ except:
    print(e)
                 """.strip()
         self.run_visitor(code, xml_filename='exception-catch-no-type.xml')
-        self.assert_no_issue()
+        self.assert_found_issue(3, 'W0002')
 
-    def test_catch_multiple_types(self):
+    def test_catch_multiple_types_no_issue(self):
         code = """
 try:
    calc()
 except (ValueError, KeyError) as e:
    print(e)
                 """.strip()
-        self.run_visitor(code, xml_filename='exception-catch-multi-types.xml')
+        self.run_visitor(code, xml_filename='exception-catch-multi-no-issue.xml')
         self.assert_no_issue()
+
+    def test_catch_multiple_types_with_issue(self):
+        code = """
+try:
+   calc()
+except (Exception, ValueError) as e:
+   print(e)
+                """.strip()
+        self.run_visitor(code, xml_filename='exception-catch-multi-with-issue.xml')
+        self.assert_found_issue(3, 'W0002')
 
 
 class VariableUsageVisitorTest(TestCase, VisitorTestMixin):
@@ -100,33 +122,50 @@ class VariableUsageVisitorTest(TestCase, VisitorTestMixin):
         self.run_visitor(code, xml_filename='var-no-func.xml')
         self.assert_no_issue()
 
-    def test_vars_all_used(self):
+    def test_global_vars_used(self):
         code = """
-def fn():
+name = 'user'
+print(name)        
+        """.strip()
+        self.run_visitor(code, xml_filename='global-vars-used.xml')
+        self.assert_no_issue()
+
+    def test_global_vars_unused(self):
+        code = """
+name = 'user'
+print('hello')        
+        """.strip()
+        self.run_visitor(code, xml_filename='global-vars-unused.xml')
+        self.assert_found_issue(1, 'W0003')
+
+    def test_local_vars_used(self):
+        code = """
+def fn():        
     name = 'user'
     print(name)        
         """.strip()
-        self.run_visitor(code, xml_filename='var-all-used.xml')
+        self.run_visitor(code, xml_filename='local-vars-used.xml')
         self.assert_no_issue()
 
-    def test_vars_not_used(self):
+    def test_local_vars_unused(self):
         code = """
-def fn():
+def fn():        
     name = 'user'
     print('hello')        
         """.strip()
-        self.run_visitor(code, xml_filename='vars-not-used.xml')
+        self.run_visitor(code, xml_filename='local-vars-unused.xml')
         self.assert_found_issue(2, 'W0003')
 
     def test_nested_funcs(self):
         code = """
 def outer():
   def inner():
-      name = 'user'
+      name = 'inner'
       print('hello')
-  inner()        
+  name = 'outer'
+  print(name)
         """.strip()
-        self.run_visitor(code, xml_filename='vars-nested.xml')
+        self.run_visitor(code, xml_filename='vars-nested-func.xml')
         self.assert_found_issue(3, 'W0003')
 
 
