@@ -13,7 +13,7 @@ This project is working in progress.
 | byterun |  |
 | spreadsheet |  |
 | contingent |  |
-| object model |  |
+| object model | Done |
 | Image Filter app |  |
 | flow-shop |  |
 | same-origin-policy |  |
