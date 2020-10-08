@@ -41,4 +41,20 @@ Continuous Integration example.
 """
 Static Analysis
 """
-from static_analysis.main import main; main()
+# from static_analysis.main import main; main()
+
+"""
+A Simple Object Model
+"""
+# Run step 00: get/set field
+# from objmodel.step00_get_set_field import test_objmodel; test_objmodel.main()
+# Run step 01: get/set class field
+# from objmodel.step01_get_set_class_field import test_objmodel; test_objmodel.main()
+# Run step 02: is instance
+# from objmodel.step02_is_instance import test_objmodel; test_objmodel.main()
+# Run step 03: call method
+# from objmodel.step03_call_method import test_objmodel; test_objmodel.main()
+# Run step 04: meta object protocol
+# from objmodel.step04_meta_protocol import test_objmodel; test_objmodel.main()
+# Run step 05: memory optimize
+# from objmodel.step05_mem_optimize import test_objmodel; test_objmodel.main()
