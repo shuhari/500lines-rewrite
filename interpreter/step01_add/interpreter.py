@@ -33,21 +33,18 @@ class Interpreter:
             fn = getattr(self, 'exec_' + instruction.opname)
             fn(instruction.arg)
             if trace_stack:
-                self.trace_stack(instruction)
+                self.dump_stack(instruction)
 
     def dump_code(self):
         print(f"====dis code of {self._code.co_name}====")
         print('co_names:', self._code.co_names)
         print('co_consts:', self._code.co_consts)
         print('co_code', self._code.co_code)
+        print('co_varnames', self._code.co_varnames)
         dis.dis(self._code)
 
-        print("====instructions====")
-        for instruction in dis.get_instructions(self._code):
-            print(instruction.opcode, instruction.opname, instruction.arg, instruction.offset)
-
-    def trace_stack(self, instruction):
-        print(f'Stack after instruction {instruction.opname}({instruction.offset}): {self._stack}')
+    def dump_stack(self, instruction):
+        print(f'Stack after {instruction.opname}({instruction.offset}): {self._stack}')
 
     def exec_LOAD_NAME(self, namei):
         name = self.get_name(namei)

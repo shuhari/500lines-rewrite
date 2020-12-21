@@ -3,13 +3,18 @@ import dis
 
 
 class Interpreter:
-    def __init__(self, source):
+    def __init__(self, source, local_vars=None, dump_code=False, trace_stack=False):
         self._code = compile(source, filename='', mode='exec')
         self._locals = {}
         self._stack = []
+        self._dump_code = dump_code
+        self._trace_stack = trace_stack
         self._builtins = {
             'divmod': divmod,
         }
+        if local_vars:
+            for k, v in local_vars.items():
+                self.set_local(k, v)
 
     def get_local(self, name):
         return self._locals[name]
@@ -29,28 +34,32 @@ class Interpreter:
     def stack_pop(self):
         return self._stack.pop(-1)
 
-    def exec(self, dump_code=False, trace_stack=False):
-        if dump_code:
+    def stack_popn(self, count):
+        if count > 0:
+            result = self._stack[-count:]
+            self._stack = self._stack[:-count]
+            return result
+        return []
+
+    def exec(self):
+        if self._dump_code:
             self.dump_code()
         for instruction in dis.get_instructions(self._code):
             fn = getattr(self, 'exec_' + instruction.opname)
             fn(instruction.arg)
-            if trace_stack:
-                self.trace_stack(instruction)
+            if self._trace_stack:
+                self.dump_stack(instruction)
 
     def dump_code(self):
         print(f"====dis code of {self._code.co_name}====")
         print('co_names:', self._code.co_names)
         print('co_consts:', self._code.co_consts)
         print('co_code', self._code.co_code)
+        print('co_varnames', self._code.co_varnames)
         dis.dis(self._code)
 
-        print("====instructions====")
-        for instruction in dis.get_instructions(self._code):
-            print(instruction.opcode, instruction.opname, instruction.arg, instruction.offset)
-
-    def trace_stack(self, instruction):
-        print(f'Stack after instruction {instruction.opname}({instruction.offset}): {self._stack}')
+    def dump_stack(self, instruction):
+        print(f'Stack after {instruction.opname}({instruction.offset}): {self._stack}')
 
     def exec_LOAD_NAME(self, namei):
         name = self.get_name(namei)
@@ -81,9 +90,7 @@ class Interpreter:
         pass
 
     def exec_CALL_FUNCTION(self, argc):
-        args = []
-        for i in range(argc):
-            args.insert(0, self.stack_pop())
+        args = self.stack_popn(argc)
         func = self._stack.pop(-1)
         result = func(*args)
         self.stack_push(result)

@@ -10,22 +10,13 @@ def dump_recursive(code):
         print('co_names:', acode.co_names)
         print('co_consts:', acode.co_consts)
         print('co_code', acode.co_code)
+        print('co_varnames:', acode.co_varnames)
         dis.dis(acode)
-        #
-        # print("====instructions====")
-        # for instruction in dis.get_instructions(acode):
-        #     print(instruction.opcode, instruction.opname, instruction.arg, instruction.offset)
 
     dump(code)
     for item in code.co_consts:
         if hasattr(item, 'co_code'):
             dump_recursive(item)
-
-
-def builtin_scope():
-    return ChainMap({
-        'divmod': divmod,
-    })
 
 
 class ReturnValue(Exception):
@@ -84,7 +75,14 @@ class Frame:
     def stack_pop(self):
         return self._stack.pop(-1)
 
-    def exec(self, trace_stack=False):
+    def stack_popn(self, count):
+        if count > 0:
+            result = self._stack[-count:]
+            self._stack = self._stack[:-count]
+            return result
+        return []
+
+    def exec(self):
         # each instruction is delegated to a method found by name.
         # If the method returns True, it means it will make code jump itself,
         # or else the code will continue execution to next instruction.
@@ -93,7 +91,7 @@ class Frame:
                 instruction = self._instructions[self._next_instruction]
                 fn = getattr(self, 'exec_' + instruction.opname)
                 instruction_result = fn(instruction.arg)
-                if trace_stack:
+                if self._interpreter.trace_stack:
                     self.dump_stack(instruction)
                 if not instruction_result:
                     self._next_instruction += 1
@@ -128,9 +126,7 @@ class Frame:
         raise ReturnValue(value)
 
     def exec_CALL_FUNCTION(self, argc):
-        args = []
-        for i in range(argc):
-            args.insert(0, self.stack_pop())
+        args = self.stack_popn(argc)
         func = self._stack.pop(-1)
         result = func(*args)
         self.stack_push(result)
@@ -194,11 +190,20 @@ class Frame:
 
 
 class Interpreter:
-    def __init__(self, source):
+    def __init__(self, source, local_vars=None, dump_code=False, trace_stack=False):
         self._code = compile(source, filename='', mode='exec')
-        self._scope = builtin_scope()
+        self._dump_code = dump_code
+        self.trace_stack = trace_stack
+        builtin_scope = ChainMap({
+            'divmod': divmod,
+        })
+        self._scope = builtin_scope
         self._frames = []
+
         main_frame = Frame(self, self._code, self._scope)
+        if local_vars:
+            for k, v in local_vars.items():
+                main_frame.set_local(k, v)
         self._frames.append(main_frame)
         # main frame treat as global scope and never pop
 
@@ -217,7 +222,7 @@ class Interpreter:
     def frame_pop(self):
         return self._frames.pop(-1)
 
-    def exec(self, dump_code=False, trace_stack=False):
-        if dump_code:
+    def exec(self):
+        if self._dump_code:
             dump_recursive(self._code)
         self.top_frame().exec()

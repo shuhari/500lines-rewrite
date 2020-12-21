@@ -8,7 +8,7 @@ class InterpreterTest(unittest.TestCase):
         source = "n = a + 1"
         interpreter = Interpreter(source)
         interpreter.set_local('a', 2)
-        interpreter.exec(dump_code=True, trace_stack=True)
+        interpreter.exec(True, True)
         self.assertEqual(3, interpreter.get_local('n'))
 
 
