@@ -58,3 +58,19 @@ A Simple Object Model
 # from objmodel.step04_meta_protocol import test_objmodel; test_objmodel.main()
 # Run step 05: memory optimize
 # from objmodel.step05_mem_optimize import test_objmodel; test_objmodel.main()
+
+"""
+A Python Interpreter Written in Python
+"""
+# Run step 00: using dis
+# from interpreter.step00_using_dis import main; main()
+# Run step 01: implement add code
+# from interpreter.step01_add import test_interpreter; test_interpreter.main()
+# Run step 02: call function
+# from interpreter.step02_call_func import test_interpreter; test_interpreter.main()
+# Run step 03: if branch
+# from interpreter.step03_if import test_interpreter; test_interpreter.main()
+# Run step 04: globals
+# from interpreter.step04_define_func import test_interpreter; test_interpreter.main()
+# Run step 05: list comprehension
+from interpreter.step05_listcomp import test_interpreter; test_interpreter.main()
