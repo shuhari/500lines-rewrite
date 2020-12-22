@@ -1,5 +1,6 @@
 """A Python byte code interpreter (for learning purpose)"""
 import dis
+import builtins
 
 
 class ReturnValue(Exception):
@@ -15,9 +16,7 @@ class Interpreter:
         self._stack = []
         self._dump_code = dump_code
         self._trace_stack = trace_stack
-        self._builtins = {
-            'divmod': divmod,
-        }
+        self._builtins = {x: getattr(builtins, x) for x in dir(builtins) if not x.startswith('__')}
         if local_vars:
             for k, v in local_vars.items():
                 self.set_local(k, v)

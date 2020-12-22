@@ -1,5 +1,6 @@
 """A Python byte code interpreter (for learning purpose)"""
 import dis
+import builtins
 from collections import ChainMap
 
 
@@ -36,8 +37,7 @@ class Function:
 
     def __call__(self, *args, **kwargs):
         frame = Frame(self.interpreter, self.code, self.interpreter.top_frame().scope)
-        for index, arg in enumerate(args):
-            frame.set_var(index, arg)
+        frame.set_args(args)
         self.interpreter.frame_push(frame)
         result = frame.exec()
         self.interpreter.frame_pop()
@@ -65,9 +65,10 @@ class Frame:
     def get_const(self, consti):
         return self._code.co_consts[consti]
 
-    def set_var(self, varnum, value):
-        name = self._code.co_varnames[varnum]
-        self.set_local(name, value)
+    def set_args(self, args):
+        for varnum, arg in enumerate(args):
+            name = self._code.co_varnames[varnum]
+            self.set_local(name, arg)
 
     def stack_push(self, value):
         self._stack.append(value)
@@ -234,14 +235,11 @@ class Frame:
 class Interpreter:
     def __init__(self, source, local_vars=None, dump_code=False, trace_stack=False):
         self._code = compile(source, filename='', mode='exec')
-        builtin_scope = ChainMap({
-            'divmod': divmod,
-            'range': range
-        })
-        self._scope = builtin_scope
-        self._frames = []
         self._dump_code = dump_code
         self.trace_stack = trace_stack
+        builtin_dict = {x: getattr(builtins, x) for x in dir(builtins) if not x.startswith('__')}
+        self._scope = ChainMap(builtin_dict)
+        self._frames = []
 
         main_frame = Frame(self, self._code, self._scope)
         if local_vars:
@@ -263,6 +261,8 @@ class Interpreter:
         self._frames.append(frame)
 
     def frame_pop(self):
+        if len(self._frames) == 1:
+            raise RuntimeError('main frame cannot pop out')
         return self._frames.pop(-1)
 
     def exec(self):

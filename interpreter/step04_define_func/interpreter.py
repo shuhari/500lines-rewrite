@@ -1,5 +1,6 @@
 """A Python byte code interpreter (for learning purpose)"""
 import dis
+import builtins
 from collections import ChainMap
 
 
@@ -11,7 +12,7 @@ def dump_recursive(code):
         print('co_consts:', acode.co_consts)
         print('co_code', acode.co_code)
         print('co_varnames:', acode.co_varnames)
-        dis.dis(acode)
+        dis.dis(acode, depth=0)
 
     dump(code)
     for item in code.co_consts:
@@ -36,8 +37,7 @@ class Function:
 
     def __call__(self, *args, **kwargs):
         frame = Frame(self.interpreter, self.code, self.interpreter.top_frame().scope)
-        for index, arg in enumerate(args):
-            frame.set_var(index, arg)
+        frame.set_args(args)
         self.interpreter.frame_push(frame)
         result = frame.exec()
         self.interpreter.frame_pop()
@@ -65,9 +65,10 @@ class Frame:
     def get_const(self, consti):
         return self._code.co_consts[consti]
 
-    def set_var(self, varnum, value):
-        name = self._code.co_varnames[varnum]
-        self.set_local(name, value)
+    def set_args(self, args):
+        for varnum, arg in enumerate(args):
+            name = self._code.co_varnames[varnum]
+            self.set_local(name, arg)
 
     def stack_push(self, value):
         self._stack.append(value)
@@ -99,7 +100,7 @@ class Frame:
                 return e.value
 
     def dump_stack(self, instruction):
-        print(f'Stack after instruction {instruction.opname}({instruction.offset}): {self._stack}')
+        print(f'Stack after {instruction.opname}({instruction.offset}): {self._stack}')
 
     def exec_LOAD_NAME(self, namei):
         name = self.get_name(namei)
@@ -194,10 +195,8 @@ class Interpreter:
         self._code = compile(source, filename='', mode='exec')
         self._dump_code = dump_code
         self.trace_stack = trace_stack
-        builtin_scope = ChainMap({
-            'divmod': divmod,
-        })
-        self._scope = builtin_scope
+        builtin_dict = {x: getattr(builtins, x) for x in dir(builtins) if not x.startswith('__')}
+        self._scope = ChainMap(builtin_dict)
         self._frames = []
 
         main_frame = Frame(self, self._code, self._scope)
@@ -220,6 +219,8 @@ class Interpreter:
         self._frames.append(frame)
 
     def frame_pop(self):
+        if len(self._frames) == 1:
+            raise RuntimeError('main frame cannot pop out')
         return self._frames.pop(-1)
 
     def exec(self):

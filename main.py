@@ -73,4 +73,4 @@ A Python Interpreter Written in Python
 # Run step 04: globals
 # from interpreter.step04_define_func import test_interpreter; test_interpreter.main()
 # Run step 05: list comprehension
-from interpreter.step05_listcomp import test_interpreter; test_interpreter.main()
+# from interpreter.step05_listcomp import test_interpreter; test_interpreter.main()
