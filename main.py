@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
 Web Server example.
 """
@@ -74,3 +76,9 @@ A Python Interpreter Written in Python
 # from interpreter.step04_define_func import test_interpreter; test_interpreter.main()
 # Run step 05: list comprehension
 # from interpreter.step05_listcomp import test_interpreter; test_interpreter.main()
+
+"""
+Contingent
+"""
+# Run step 00: project cli
+from contingent.step00_cli import main; main()
