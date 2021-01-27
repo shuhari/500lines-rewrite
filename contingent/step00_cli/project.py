@@ -11,7 +11,6 @@ class Project:
         self.cache_dir = os.path.join(base_dir, 'cache')
         self.build_dir = os.path.join(base_dir, 'build')
         self.supported_targets = ('build', 'clean', 'rebuild')
-        self.verbose = ('--verbose' in sys.argv)
 
     def usage(self):
         """Show usage"""
@@ -21,8 +20,6 @@ class Project:
             method = getattr(self, target_name)
             name, doc = method.__name__, method.__doc__
             print(f'  {entry} {name} - {doc}')
-        print('Options:')
-        print('  --verbose: Show verbose output')
 
     def run(self, target_name):
         """Run specified target"""

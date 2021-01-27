@@ -81,4 +81,6 @@ A Python Interpreter Written in Python
 Contingent
 """
 # Run step 00: project cli
-from contingent.step00_cli import main; main()
+# from contingent.step00_cli import main; main()
+# Run step 02: tasks pipeline
+from contingent.step01_tasks import main; main()
