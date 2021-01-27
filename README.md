@@ -7,46 +7,43 @@
 
 This project is working in progress.
 
-| Project | Status |
-|---------|--------|
-| editorial |  |
-| byterun |  |
-| spreadsheet |  |
-| contingent |  |
-| object model | Done |
-| Image Filter app |  |
-| flow-shop |  |
-| same-origin-policy |  |
-| contingent |  |
-| dagoba |  |
-| Pedometer |  |
+| Project | Status | Blog Article |
+|---------|--------|--------------|
 | blockcode |  |
+| ci | Done | [rewrite-ci](https://shuhari.dev/blog/2020/06/500lines-rewrite-ci) |
 | cluster |  |
-| Modeller |  |
-| same-origin-policy |  |
-| web-server | Done |
+| contingent |  |
 | crawler |  |
-| sampler |  |
-| static analysis | Done |
-| event-web-framework |  |
-| ci | Done |
-| ocr |  |
-| templating engine | Done |
-| same-origin-policy |  |
+| dagoba |  |
 | data-store |  |
-| In-memory functional database |  |
+| editorial |  |
+| event-web-framework |  |
+| flow-shop |  |
+| functionaldb |  |
+| image-filters |  |
+| interpreter |  DONE | [rewrite-interpreter](https://shuhari.dev/blog/2020/12/500lines-rewrite-interpreter) |
+| modeller |  |
+| objmodel | Done | [rewrite-objmodel](https://shuhari.dev/blog/2020/06/500lines-rewrite-objmodel) |
+| ocr |  |
+| pedometer |  |
+| same-origin-policy |  |
+| sampler |  |
+| spreadsheet |  |
+| static analysis | Done | [rewrite-static-analysis](https://shuhari.dev/blog/2020/07/500lines-rewrite-static-analysis) |
+| templating engine | Done | [rewrite-template-engine](https://shuhari.dev/blog/2020/05/500lines-rewrite-template-engine) |
+| web-server | Done | [rewrite-web-server](https://shuhari.dev/blog/2020/05/500lines-rewrite-web-server) |
 
 
 <a name="english-readme"/>
 
 ## Readme in English
 
-This is rewritten of original project [500 Lines or Less](https://github.com/aosabook/500lines) with improvements in the following aspects:
+Rewritten of original project [500 Lines or Less](https://github.com/aosabook/500lines) with improvements in the following aspects:
 
-- Code written in `PY2` are rewritten in `PY3`
-- Remove some outdated content (e.g CGI) and replace with newer mechanism. For example, HTTP processing pipeline are introduced instead of `CGI`
+- Code written in `Python2` are rewritten in `Python3`
+- Replace some of the outdated content with newer mechanism. For example, HTTP processing pipeline are introduced instead of `CGI`
 - Written in a step-by-step manner, showing actual code for each step, so we can see how to make progress
-- Some projects are developed in a test-driven (TDD) manner
+- Some of the projects are developed in a test-driven (TDD) manner
 
 Project relatived articles are published at [My blog](https://shuhari.dev/blog/2020/05/500lines-rewrite-intro), in Chinese language.
  
@@ -54,23 +51,23 @@ Project relatived articles are published at [My blog](https://shuhari.dev/blog/2
 
 To run the program code, you need
 
-- `Python3`. Any version higher than `Python3.6` should work (however not verified). The development environment is `Python3.8`.
+- `Python3`. Any version higher than `Python3.6` should work (not verified, however). Current development environment is `Python3.8`.
 
-Code of each project is in a separated directory, naming after [the original project](https://github.com/aosabook/500lines). Some whitespace and `-` character are replaced with `_` for the sake of references in code. Each step has also its own sub-directory.
+Code of each project is in a separated directory, naming after [the original project](https://github.com/aosabook/500lines). Whitespace or hyphen(`-`) are replaced with underline(`_`) for the sake of references in code. For thosed developed in a step-by-step manner, each step also has its own sub-directory.
 
-To run a projects written in Python: open `main.py`, find the entry point for the project of interest, uncomment it and run.
+To run a projects written in Python: open `main.py` in project root, find the entry point for the project of interest, uncomment it and run.
 
 
-<a name="chinese-readme"/>
+<a name="chinese-readme" />
 
 ## 中文自述
 
 本项目试图以更加现代化的方式重写 [500 Lines or Less](https://github.com/aosabook/500lines) 项目，并在以下方面有所改进：
 
-- 将基于 `PY2` 的项目改写为基于 `PY3`
-- 删除部分过时的内容，用更适合现实的机制代替。例如，`CGI` 被 HTTP 处理管线替代
+- 将基于 `Python2` 的项目改写为基于 `Python3`
+- 删除部分过时的内容，用更适合现实的机制代替。例如，`CGI` 机制换成了 `HTTP` 处理管线
 - 用循序渐进的方式编写代码，展示每个具体步骤，让读者能够更好地理解
-- 部分项目采用测试驱动（TDD）的方式开发。
+- 部分项目采用测试驱动（`TDD`）的方式开发。
 
 项目相关的介绍文章发布在 [作者的博客](https://shuhari.dev/blog/2020/05/500lines-rewrite-intro).
  
@@ -78,9 +75,9 @@ To run a projects written in Python: open `main.py`, find the entry point for th
 
 要运行程序代码，需要
 
-- `Python3`。理论上任何高于 Python3.6 的版本均可（但未验证）。实际开发环境是 Python3.8
+- `Python3`。理论上任何高于 Python3.6 的版本均可（但未验证）。目前使用的开发环境是 Python3.8
 
-各个项目分别放在不同的目录下，命名方式遵照原先的名称，为了方便引用，部分空格或 `-` 用 `_` 替代。对于使用迭代式开发的项目，每个步骤放在单独的目录下。
+各个项目分别放在不同的目录下，命名方式遵照原先的名称，为了方便在代码中引用，部分空格或连字符(`-`)用下划线(`_`) 替代。对于使用迭代式开发的项目，每个步骤放在单独的目录下。
 
-对于用 `Python` 实现的项目，请访问 `main.py`， 找到特定的项目以及步骤编号，取消注释并运行。
+对于用 `Python` 实现的项目，请打开项目根目录下的 `main.py`， 找到特定的项目以及步骤编号，取消注释并运行。
 
