@@ -85,6 +85,10 @@ Contingent
 # Run step 01: tasks pipeline
 # from contingent.step01_tasks import main; main()
 # Run step 02: parse rst file
-from contingent.step02_parse import main; main()
+# from contingent.step02_parse import main; main()
 # Run tests of Step 02: parse rst file
 # from contingent.step02_parse.tests import main; main()
+# Run step 03: transform ast to code
+from contingent.step03_transform import main; main()
+# Run tests of Step 03: transform ast to code
+# from contingent.step03_transform.tests import main; main()

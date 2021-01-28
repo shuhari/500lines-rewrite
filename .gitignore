@@ -2,3 +2,6 @@
 
 .idea/
 .vscode/
+
+contingent/docs/cache/
+contingent/docs/build/
