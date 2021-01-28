@@ -2,7 +2,8 @@ import os
 import shutil
 import sys
 
-from .core import BuildContext, Task
+from .core import BuildContext, Task, AstDoc
+from .parser import parse_file
 
 
 class Project:
@@ -70,50 +71,52 @@ class Parse(Task):
         return f'parse({self.filename})'
 
     def run(self):
-        self.ctx.add_compile_task(Transform(self.filename))
+        full_path = os.path.join(self.ctx.src_dir, self.filename)
+        ast = parse_file(full_path)
+        self.ctx.add_compile_task(Transform(ast))
 
 
 class Transform(Task):
-    def __init__(self, filename):
-        self.filename = filename
+    def __init__(self, ast: AstDoc):
+        self.ast = ast
 
     def __str__(self):
         return f'transform({self.filename})'
 
     def run(self):
-        self.ctx.add_compile_task(WriteTpl(self.filename))
-        self.ctx.add_compile_task(WriteTitle(self.filename))
-        self.ctx.add_compile_task(WriteTocTree(self.filename))
+        self.ctx.add_compile_task(WriteTpl(self.doc))
+        self.ctx.add_compile_task(WriteTitle(self.doc))
+        self.ctx.add_compile_task(WriteTocTree(self.doc))
 
 
 class WriteTpl(Task):
-    def __init__(self, filename):
-        self.filename = filename
+    def __init__(self, doc):
+        self.doc = doc
 
     def __str__(self):
-        return f'write_tpl({self.filename})'
+        return f'write_tpl({self.doc.data})'
 
     def run(self):
         pass
 
 
 class WriteTitle(Task):
-    def __init__(self, filename):
-        self.filename = filename
+    def __init__(self, doc):
+        self.doc = doc
 
     def __str__(self):
-        return f'write_title({self.filename})'
+        return f'write_title({self.doc.data})'
 
     def run(self):
         pass
 
 
 class WriteTocTree(Task):
-    def __init__(self, filename):
-        self.filename = filename
+    def __init__(self, doc):
+        self.doc = doc
 
     def __str__(self):
-        return f'write_toctree({self.filename})'
+        return f'write_toctree({self.doc.data})'
 
     def run(self):
         pass

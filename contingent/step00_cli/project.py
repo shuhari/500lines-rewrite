@@ -14,7 +14,7 @@ class Project:
 
     def usage(self):
         """Show usage"""
-        entry = sys.argv[0]
+        entry = os.path.basename(sys.argv[0])
         print('Usage:')
         for target_name in self.supported_targets:
             method = getattr(self, target_name)

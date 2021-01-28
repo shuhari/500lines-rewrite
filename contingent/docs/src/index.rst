@@ -6,3 +6,5 @@ Table of Contents
    install
    tutorial
    api
+
+This is the main text.

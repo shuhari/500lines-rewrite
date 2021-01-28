@@ -82,5 +82,9 @@ Contingent
 """
 # Run step 00: project cli
 # from contingent.step00_cli import main; main()
-# Run step 02: tasks pipeline
-from contingent.step01_tasks import main; main()
+# Run step 01: tasks pipeline
+# from contingent.step01_tasks import main; main()
+# Run step 02: parse rst file
+from contingent.step02_parse import main; main()
+# Run tests of Step 02: parse rst file
+# from contingent.step02_parse.tests import main; main()
