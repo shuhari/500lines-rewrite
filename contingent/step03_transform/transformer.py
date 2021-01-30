@@ -3,8 +3,7 @@ from .core import AstDoc, AstNode, Code
 
 def transform(doc: AstDoc) -> Code:
     """Transform ast model to code model"""
-    code = Code()
-    code.name = doc.data
+    code = Code(doc.data)
     code.title = doc.title()
     transform_toctree(doc, code)
     CodeVisitor(code).visit(doc)
@@ -46,6 +45,7 @@ def transform_toctree(doc: AstDoc, code: Code):
 
 
 class CodeVisitor:
+    """Visit structure of ast model to generate code"""
     def __init__(self, code: Code):
         self.code = code
 

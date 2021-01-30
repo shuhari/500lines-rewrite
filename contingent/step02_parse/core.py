@@ -17,20 +17,22 @@ class BuildContext:
     def add_link_task(self, task):
         self.link_tasks.append(task)
 
-    def run_task(self, task_list, task):
+    def exec_task(self, task_list, task):
+        """Run a single task, record as executed, and remove from task list"""
         task.exec(self)
         if task_list:
             task_list.remove(task)
         self.executed_tasks.append(task)
 
-    def run_tasks(self, task_list):
+    def exec_tasks(self, task_list):
+        """execute all until no task pending"""
         while task_list:
             for task in task_list[:]:
-                self.run_task(task_list, task)
+                self.exec_task(task_list, task)
 
 
 class Task:
-    """Abstract task base class"""
+    """Abstract base class of task"""
     def exec(self, ctx: BuildContext):
         self.ctx = ctx
         self.run()
@@ -51,6 +53,7 @@ class AstNode:
         self.children.append(child)
 
     def ast_string(self, depth: int):
+        """Show content with indent for debug"""
         indent = ' ' * (depth * 2)
         result = f'{indent}{self.name}'
         if self.data:
@@ -58,6 +61,7 @@ class AstNode:
         return result
 
     def iter(self, depth: int):
+        """Iterate all nodes recursively"""
         yield depth, self
         for child in self.children or []:
             for descendant in child.iter(depth + 1):
@@ -70,5 +74,6 @@ class AstDoc(AstNode):
         super().__init__('doc', data)
 
     def dump_ast(self):
+        """for debug"""
         return '\n'.join([item.ast_string(depth)
                           for depth, item in self.iter(depth=0)])

@@ -3,16 +3,17 @@ from unittest import TestCase
 
 from ..core import AstDoc
 from ..parser import parse_file
+from ..utils import relative_of
 
 
-def parse_ast(file_name: str) -> AstDoc:
-    file_path = os.path.join(os.path.dirname(__file__), '../../docs/src/' + file_name)
+def parse_test_file(file_name: str) -> AstDoc:
+    file_path = relative_of(__file__, '../../docs/src/' + file_name)
     return parse_file(file_path)
 
 
 class ParserTest(TestCase):
     def assert_parse(self, file_name, expected_ast):
-        ast = parse_ast(file_name)
+        ast = parse_test_file(file_name)
         self.assertEqual(expected_ast.strip(), ast.dump_ast())
 
     def test_parse_install(self):

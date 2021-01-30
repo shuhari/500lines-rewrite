@@ -1,11 +1,11 @@
-import os
 import sys
 
 from .project import Project
+from .utils import relative_of
 
 
 def main():
-    base_dir = os.path.normpath(os.path.join(os.path.dirname(__file__), '../docs'))
+    base_dir = relative_of(__file__, '../docs')
     proj = Project(base_dir)
     if len(sys.argv) < 2:
         proj.usage()

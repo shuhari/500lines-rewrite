@@ -8,41 +8,41 @@ from .transformer import transform
 
 
 class Project:
-    """Mange build process."""
+    """Manage command line interface of project."""
 
     def __init__(self, base_dir):
         self.ctx = BuildContext(base_dir)
-        self.supported_targets = ('build', 'clean', 'rebuild')
+        self.targets = ('build', 'clean', 'rebuild')
         self.verbose = ('--verbose' in sys.argv)
 
     def usage(self):
         """Show usage"""
         entry = os.path.basename(sys.argv[0])
         print('Usage:')
-        for target_name in self.supported_targets:
-            method = getattr(self, target_name)
+        for target in self.targets:
+            method = getattr(self, target)
             name, doc = method.__name__, method.__doc__
             print(f'  {entry} {name} - {doc}')
         print('Options:')
         print('  --verbose: Show verbose output')
 
-    def run(self, target_name):
+    def run(self, target):
         """Run specified target"""
-        assert target_name in self.supported_targets, f'Unsupported target: {target_name}'
-        method = getattr(self, target_name)
+        assert target in self.targets, f'Unsupported target: {target}'
+        method = getattr(self, target)
         method()
 
     def build(self):
         """Build project"""
-        self.ctx.run_task(None, Scan())
-        self.ctx.run_tasks(self.ctx.compile_tasks)
-        self.ctx.run_tasks(self.ctx.link_tasks)
+        self.ctx.exec_task(None, Scan())
+        self.ctx.exec_tasks(self.ctx.compile_tasks)
+        self.ctx.exec_tasks(self.ctx.link_tasks)
         if self.verbose:
             for task in self.ctx.executed_tasks:
-                print(f'  executed task: {task}')
+                print(f'executed task: {task}')
 
     def clean(self):
-        """Clean intermedate files"""
+        """Clean intermediate files"""
         shutil.rmtree(self.ctx.build_dir, ignore_errors=True)
         shutil.rmtree(self.ctx.cache_dir, ignore_errors=True)
         print('Cleaned up.')
@@ -54,6 +54,7 @@ class Project:
 
 
 class Scan(Task):
+    """Scan source directory for rst files"""
     def __str__(self):
         return 'scan'
 
@@ -65,6 +66,7 @@ class Scan(Task):
 
 
 class Parse(Task):
+    """Parse rst file to ast model"""
     def __init__(self, filename):
         self.filename = filename
 
@@ -78,6 +80,7 @@ class Parse(Task):
 
 
 class Transform(Task):
+    """Transform ast model to code model"""
     def __init__(self, ast: AstDoc):
         self.ast = ast
 
@@ -90,6 +93,7 @@ class Transform(Task):
 
 
 class WriteCache(Task):
+    """Write code to cache"""
     def __init__(self, code: Code):
         self.code = code
 
@@ -97,14 +101,12 @@ class WriteCache(Task):
         return f'write_tpl({self.code.name})'
 
     def run(self):
-        self.ctx.cache.set_output(self.code.name, self.code.dependencies)
-        self.ctx.cache.set_input('doc', self.code.name, self.code.html)
-        self.ctx.cache.set_input('title', self.code.name, self.code.title)
-        self.ctx.cache.set_input('toctree', self.code.name, self.code.toctree)
+        self.code.write_cache(self.ctx.cache)
         self.ctx.cache.save()
 
 
 class Link(Task):
+    """Execute link step to generate final output"""
     def __init__(self, filename):
         self.filename = filename
 
@@ -112,5 +114,4 @@ class Link(Task):
         return f'link({self.filename})'
 
     def run(self):
-        import pprint
-        pprint.pprint(self.ctx.cache._data)
+        pass

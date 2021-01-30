@@ -9,28 +9,28 @@ from .linker import link
 
 
 class Project:
-    """Mange build process."""
+    """Manage command line interface of project."""
 
     def __init__(self, base_dir):
         self.ctx = BuildContext(base_dir)
-        self.supported_targets = ('build', 'clean', 'rebuild')
+        self.targets = ('build', 'clean', 'rebuild')
         self.verbose = ('--verbose' in sys.argv)
 
     def usage(self):
         """Show usage"""
         entry = os.path.basename(sys.argv[0])
         print('Usage:')
-        for target_name in self.supported_targets:
-            method = getattr(self, target_name)
+        for target in self.targets:
+            method = getattr(self, target)
             name, doc = method.__name__, method.__doc__
             print(f'  {entry} {name} - {doc}')
         print('Options:')
         print('  --verbose: Show verbose output')
 
-    def run(self, target_name):
+    def run(self, target):
         """Run specified target"""
-        assert target_name in self.supported_targets, f'Unsupported target: {target_name}'
-        method = getattr(self, target_name)
+        assert target in self.targets, f'Unsupported target: {target}'
+        method = getattr(self, target)
         method()
 
     def build(self):
@@ -43,7 +43,7 @@ class Project:
                 print(f'  executed task: {task}')
 
     def clean(self):
-        """Clean intermedate files"""
+        """Clean intermediate files"""
         shutil.rmtree(self.ctx.build_dir, ignore_errors=True)
         shutil.rmtree(self.ctx.cache_dir, ignore_errors=True)
         print('Cleaned up.')

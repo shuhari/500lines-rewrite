@@ -1,13 +1,12 @@
-import os
 import re
 
 from .core import AstDoc, AstNode
-from .utils import find_index
+from .utils import find_index, get_name_prefix
 
 
 def parse_file(file_path) -> AstDoc:
     """parse rst file to ast model"""
-    name = os.path.splitext(os.path.basename(file_path))[0]
+    name = get_name_prefix(file_path)
     with open(file_path, 'r') as f:
         lines = [x.rstrip() for x in f.readlines()]
         doc = parse(name, lines)

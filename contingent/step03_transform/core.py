@@ -21,20 +21,22 @@ class BuildContext:
     def add_link_task(self, task):
         self.link_tasks.append(task)
 
-    def run_task(self, task_list, task):
+    def exec_task(self, task_list, task):
+        """Run a single task, record as executed, and remove from task list"""
         task.exec(self)
         if task_list:
             task_list.remove(task)
         self.executed_tasks.append(task)
 
-    def run_tasks(self, task_list):
+    def exec_tasks(self, task_list):
+        """execute all until no task pending"""
         while task_list:
             for task in task_list[:]:
-                self.run_task(task_list, task)
+                self.exec_task(task_list, task)
 
 
 class Task:
-    """Abstract task base class"""
+    """Abstract base class of task"""
     def exec(self, ctx: BuildContext):
         self.ctx = ctx
         self.run()
@@ -55,6 +57,7 @@ class AstNode:
         self.children.append(child)
 
     def ast_string(self, depth: int):
+        """Show content with indent for debug"""
         indent = ' ' * (depth * 2)
         result = f'{indent}{self.name}'
         if self.data:
@@ -62,17 +65,20 @@ class AstNode:
         return result
 
     def iter(self, depth: int):
+        """Iterate all nodes recursively"""
         yield depth, self
         for child in self.children or []:
             for descendant in child.iter(depth + 1):
                 yield descendant
 
     def header_level(self) -> int:
+        """return 1~6 for h1~h6, 0 otherwise"""
         if self.name in ('h1', 'h2', 'h3', 'h4', 'h5', 'h6'):
             return int(self.name[1:])
         return 0
 
     def slug(self):
+        """generate reference name of node"""
         return self.data.lower() \
             .replace(' ', '_') \
             .replace(',', '')
@@ -84,6 +90,7 @@ class AstDoc(AstNode):
         super().__init__('doc', data)
 
     def dump_ast(self):
+        """for debug"""
         return '\n'.join([item.ast_string(depth)
                           for depth, item in self.iter(depth=0)])
 
@@ -93,14 +100,59 @@ class AstDoc(AstNode):
         return h1[1].data if h1 else 'Untitled'
 
     def headers(self):
-        """header nodes"""
+        """iterate header nodes"""
         return [node for depth, node in self.iter(0) if node.header_level() > 0]
+
+
+class CacheFile:
+    """Save code data to cache for later reference"""
+    def __init__(self, path):
+        self.path = path
+        self._data = {
+            'dependencies': {},
+            'code': {}
+        }
+        if os.path.exists(path):
+            self.load()
+
+    def purge(self):
+        if os.path.exists(self.path):
+            os.unlink(self.path)
+        self._data = {
+            'dependencies': {},
+            'code': {}
+        }
+
+    def load(self):
+        """Load from file"""
+        with open(self.path, 'rb') as f:
+            self._data = pickle.load(f)
+
+    def save(self):
+        """Save to file"""
+        os.makedirs(os.path.dirname(self.path), exist_ok=True)
+        with open(self.path, 'wb') as f:
+            pickle.dump(self._data, f)
+
+    def set_dependencies(self, name, value):
+        self._data['dependencies'][name] = value
+
+    def get_dependencies(self, name):
+        return self._data['dependencies'][name]
+
+    def set_code(self, kind, name, data):
+        key = (kind, name)
+        self._data['code'][key] = data
+
+    def get_code(self, kind, name):
+        key = (kind, name)
+        return self._data['code'][key]
 
 
 class Code:
     """Code model"""
-    def __init__(self):
-        self.name = None
+    def __init__(self, name):
+        self.name = name
         self.title = None
         self.html = []
         self.toctree = []
@@ -118,36 +170,10 @@ class Code:
     def add_dependency(self, kind, name):
         self.dependencies.add((kind, name))
 
+    def write_cache(self, cache: CacheFile):
+        cache.set_dependencies(self.name, self.dependencies)
+        cache.set_code('doc', self.name, self.html)
+        cache.set_code('title', self.name, self.title)
+        cache.set_code('toctree', self.name, self.toctree)
 
-class CacheFile:
-    def __init__(self, path):
-        self.path = path
-        self._data = {
-            'output': {},
-            'input': {}
-        }
-        if os.path.exists(path):
-            self.load()
 
-    def load(self):
-        with open(self.path, 'rb') as f:
-            self._data = pickle.load(f)
-
-    def save(self):
-        os.makedirs(os.path.dirname(self.path), exist_ok=True)
-        with open(self.path, 'wb') as f:
-            pickle.dump(self._data, f)
-
-    def set_output(self, name, value):
-        self._data['output'][name] = value
-
-    def get_output(self, name):
-        return self._data['output'][name]
-
-    def set_input(self, kind, name, data):
-        key = (kind, name)
-        self._data['input'][key] = data
-
-    def get_input(self, kind, name):
-        key = (kind, name)
-        return self._data['input'][key]
