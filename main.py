@@ -93,6 +93,10 @@ Contingent
 # Run tests of Step 03: transform ast to code
 # from contingent.step03_transform.tests import main; main()
 # Run step 04: link
-from contingent.step04_link import main; main()
+# from contingent.step04_link import main; main()
 # Run tests of Step 04: link
 # from contingent.step04_link.tests import main; main()
+# Run step 05: incremental
+from contingent.step05_incremental import main; main()
+# Run tests of Step 05: incremental
+# from contingent.step05_incremental.tests import main; main()

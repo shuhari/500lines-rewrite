@@ -1,5 +1,6 @@
 import os
 import pickle
+from datetime import datetime
 
 from .utils import find_first
 
@@ -23,10 +24,10 @@ class BuildContext:
         self.link_tasks.append(task)
 
     def run_task(self, task_list, task):
-        task.exec(self)
+        if task.exec(self):
+            self.executed_tasks.append(task)
         if task_list:
             task_list.remove(task)
-        self.executed_tasks.append(task)
 
     def run_tasks(self, task_list):
         while task_list:
@@ -34,23 +35,44 @@ class BuildContext:
                 self.run_task(task_list, task)
 
     def get_doc(self, name):
-        return self.cache.get_input('doc', name)
+        return self.cache.get_input('doc', name)[0]
 
     def get_title(self, name):
-        return self.cache.get_input('title', name)
+        return self.cache.get_input('title', name)[0]
 
     def get_toctree(self, name):
-        return self.cache.get_input('toctree', name)
+        return self.cache.get_input('toctree', name)[0]
+
+    def get_src_timestamp(self, filename):
+        full_path = os.path.join(self.src_dir, filename)
+        if os.path.exists(full_path):
+            return datetime.fromtimestamp(os.stat(full_path).st_mtime)
+        return None
+
+    def get_build_timestamp(self, filename):
+        full_path = os.path.join(self.build_dir, filename)
+        if os.path.exists(full_path):
+            return datetime.fromtimestamp(os.stat(full_path).st_mtime)
+        return None
 
 
 class Task:
     """Abstract task base class"""
-    def exec(self, ctx: BuildContext):
+    def exec(self, ctx: BuildContext) -> bool:
         self.ctx = ctx
-        self.run()
+        if self.is_outdated():
+            self.run()
+            return True
+        return False
 
     def run(self):
         raise NotImplementedError()
+
+    def is_outdated(self) -> bool:
+        return True
+
+    def is_outdated_timestamp(self, input_timestamp, output_timestamp) -> bool:
+        return (output_timestamp is None) or (output_timestamp < input_timestamp)
 
 
 class AstNode:
@@ -156,16 +178,23 @@ class CacheFile:
         with open(self.path, 'wb') as f:
             pickle.dump(self._data, f)
 
-    def set_output(self, name, value):
-        self._data['output'][name] = value
+    def set_value(self, dic: dict, key, value) -> bool:
+        curr_value, timestamp = dic.get(key, (None, None))
+        if curr_value == value:
+            return False
+        dic[key] = (value, datetime.now())
+        return True
 
-    def get_output(self, name):
+    def set_output(self, name, value) -> bool:
+        return self.set_value(self._data['output'], name, value)
+
+    def get_output(self, name) -> tuple:
         return self._data['output'][name]
 
-    def set_input(self, kind, name, data):
+    def set_input(self, kind, name, data) -> bool:
         key = (kind, name)
-        self._data['input'][key] = data
+        return self.set_value(self._data['input'], key, data)
 
-    def get_input(self, kind, name):
+    def get_input(self, kind, name) -> tuple:
         key = (kind, name)
         return self._data['input'][key]
