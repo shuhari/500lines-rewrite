@@ -1,7 +1,7 @@
 # 500 Line or Less (Rewritten)
 
 - [Readme in English](#english-readme)
-- [中文自述](#chinese-readme>)
+- [中文自述](#chinese-readme)
 
 ## Status
 

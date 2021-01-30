@@ -3,5 +3,7 @@
 .idea/
 .vscode/
 
+contingent/sphinx-example/build/
+
 contingent/docs/cache/
 contingent/docs/build/
