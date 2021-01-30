@@ -1,11 +1,11 @@
 from unittest import TestCase
 
-from .common import parse_ast
+from .common import parse_test_file
 
 
 class ParserTest(TestCase):
     def assert_parse(self, file_name, expected_ast):
-        ast = parse_ast(file_name)
+        ast = parse_test_file(file_name)
         self.assertEqual(expected_ast.strip(), ast.dump_ast())
 
     def test_parse_install(self):

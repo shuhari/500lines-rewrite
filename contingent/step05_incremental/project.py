@@ -6,6 +6,7 @@ from .core import BuildContext, Task, AstDoc, Code
 from .parser import parse_file
 from .transformer import transform
 from .linker import link
+from .utils import get_name_prefix
 
 
 class Project:
@@ -35,12 +36,12 @@ class Project:
 
     def build(self):
         """Build project"""
-        self.ctx.run_task(None, Scan())
-        self.ctx.run_tasks(self.ctx.compile_tasks)
-        self.ctx.run_tasks(self.ctx.link_tasks)
+        self.ctx.exec_task(None, Scan())
+        self.ctx.exec_tasks(self.ctx.compile_tasks)
+        self.ctx.exec_tasks(self.ctx.link_tasks)
         if self.verbose:
             for task in self.ctx.executed_tasks:
-                print(f'  executed task: {task}')
+                print(f'executed task: {task}')
 
     def clean(self):
         """Clean intermediate files"""
@@ -55,6 +56,7 @@ class Project:
 
 
 class Scan(Task):
+    """Scan source directory for rst files"""
     def __str__(self):
         return 'scan'
 
@@ -66,6 +68,7 @@ class Scan(Task):
 
 
 class Parse(Task):
+    """Parse rst file to ast model"""
     def __init__(self, filename):
         self.filename = filename
 
@@ -73,10 +76,10 @@ class Parse(Task):
         return f'parse({self.filename})'
 
     def is_outdated(self) -> bool:
-        name = os.path.splitext(self.filename)[0]
-        _, output_timestamp = self.ctx.cache.get_output(name)
-        input_timestamp = self.ctx.get_src_timestamp(self.filename)
-        return self.is_outdated_timestamp(input_timestamp, output_timestamp)
+        name = get_name_prefix(self.filename)
+        in_timestamp = self.ctx.get_src_timestamp(self.filename)
+        out_timestamp = self.ctx.cache.get_code_timestamp('doc', name)
+        return self.is_outdated_timestamp(in_timestamp, out_timestamp)
 
     def run(self):
         full_path = os.path.join(self.ctx.src_dir, self.filename)
@@ -85,6 +88,7 @@ class Parse(Task):
 
 
 class Transform(Task):
+    """Transform ast model to code model"""
     def __init__(self, ast: AstDoc):
         self.ast = ast
 
@@ -97,6 +101,7 @@ class Transform(Task):
 
 
 class WriteCache(Task):
+    """Write code to cache"""
     def __init__(self, code: Code):
         self.code = code
 
@@ -109,25 +114,25 @@ class WriteCache(Task):
 
 
 class Link(Task):
+    """Execute link step to generate final output"""
     def __init__(self, filename):
-        self.name = os.path.splitext(filename)[0]
+        self.name = get_name_prefix(filename)
 
     def __str__(self):
         return f'link({self.name})'
 
     def is_outdated(self) -> bool:
-        output_timestamp = self.ctx.get_build_timestamp(self.name + '.html')
-        output, _ = self.ctx.cache.get_output(self.name)
-        for kind, name in output:
-            _, timestamp = self.ctx.cache.get_input(kind, name)
-            if self.is_outdated_timestamp(timestamp, output_timestamp):
+        out_timestamp = self.ctx.get_build_timestamp(self.name + '.html')
+        for kind, name in self.ctx.cache.get_dependencies(self.name):
+            in_timestamp = self.ctx.cache.get_code_timestamp(kind, name)
+            if self.is_outdated_timestamp(in_timestamp, out_timestamp):
                 return True
         return False
 
     def run(self):
         lines = link(self.ctx, self.name)
         lines = [x + '\n' for x in lines]
-        html_name = os.path.join(self.ctx.build_dir, self.name + '.html')
+        html_name = self.ctx.get_build_path(self.name, '.html')
         os.makedirs(os.path.dirname(html_name), exist_ok=True)
         with open(html_name, 'w') as f:
             f.writelines([x + '\n' for x in lines])
