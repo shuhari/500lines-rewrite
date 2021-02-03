@@ -80,4 +80,3 @@ To run a projects written in Python: open `main.py` in project root, find the en
 各个项目分别放在不同的目录下，命名方式遵照原先的名称，为了方便在代码中引用，部分空格或连字符(`-`)用下划线(`_`) 替代。对于使用迭代式开发的项目，每个步骤放在单独的目录下。
 
 对于用 `Python` 实现的项目，请打开项目根目录下的 `main.py`， 找到特定的项目以及步骤编号，取消注释并运行。
-

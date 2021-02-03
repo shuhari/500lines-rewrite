@@ -60,8 +60,6 @@ class TransformerTest(TestCase):
             '</li>',
             '</ul>'
         ])
-        html = [
-        ]
         self.assertEqual(code.html, html_lines('API Reference', [
             '<h1>API Reference</h1>',
             '<p>',
