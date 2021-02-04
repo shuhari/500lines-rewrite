@@ -12,7 +12,7 @@ This project is working in progress.
 | blockcode |  |
 | ci | Done | [rewrite-ci](https://shuhari.dev/blog/2020/06/500lines-rewrite-ci) |
 | cluster |  |
-| contingent |  |
+| contingent | Done | [rewrite-contingent](https://shuhari.dev/blog/2021/02/500lines-rewrite-contingent) |
 | crawler |  |
 | dagoba |  |
 | data-store |  |
@@ -21,7 +21,7 @@ This project is working in progress.
 | flow-shop |  |
 | functionaldb |  |
 | image-filters |  |
-| interpreter |  DONE | [rewrite-interpreter](https://shuhari.dev/blog/2020/12/500lines-rewrite-interpreter) |
+| interpreter |  Done | [rewrite-interpreter](https://shuhari.dev/blog/2020/12/500lines-rewrite-interpreter) |
 | modeller |  |
 | objmodel | Done | [rewrite-objmodel](https://shuhari.dev/blog/2020/06/500lines-rewrite-objmodel) |
 | ocr |  |
