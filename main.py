@@ -100,3 +100,8 @@ Contingent
 # from contingent.step05_incremental import main; main()
 # Run tests of Step 05: incremental
 # from contingent.step05_incremental.tests import main; main()
+
+"""
+DBDB
+"""
+from data_store.step00_binary_tree.tests import main; main()
