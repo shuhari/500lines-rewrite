@@ -1,6 +1,7 @@
 import unittest
 
 from .test_binary_tree import NodeRefTest, NodeTest, BinaryTreeTest
+from .test_storage import StorageTest
 
 
 def main():
