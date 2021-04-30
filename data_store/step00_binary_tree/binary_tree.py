@@ -12,6 +12,13 @@ class Node:
     def is_leaf(self) -> bool:
         return (self.left is None) and (self.right is None)
 
+    def transform(self, value=MISSING, left=MISSING, right=MISSING):
+        """create new node based on current"""
+        value = self.value if value is MISSING else value
+        left = self.left if left is MISSING else left
+        right = self.right if right is MISSING else right
+        return Node(self.key, value=value, left=left, right=right)
+
 
 class BinaryTree:
     def __init__(self):
@@ -27,13 +34,6 @@ class BinaryTree:
     def delete(self, key):
         self._root = remove(self._root, key)
 
-    def keys(self, order='mid'):
-        """
-        iterate keys by specified order.
-        :param order: pre | post | mid
-        """
-        return keys(self._root, order)
-
 
 def find(node, key) -> Node:
     if node is None:
@@ -46,25 +46,18 @@ def find(node, key) -> Node:
         return find(node.right, key)
 
 
-def transform(node: Node, value=MISSING, left=MISSING, right=MISSING):
-    """create new node based on current"""
-    value = node.value if value is MISSING else value
-    left = node.left if left is MISSING else left
-    right = node.right if right is MISSING else right
-    return Node(node.key, value=value, left=left, right=right)
-
 
 def insert(node: Node, key, value) -> Node:
     if not node:
         return Node(key, value)
     elif key < node.key:
-        return transform(node, left=insert(node.left, key, value))
+        return node.transform(left=insert(node.left, key, value))
     elif key > node.key:
-        return transform(node, right=insert(node.right, key, value))
+        return node.transform(right=insert(node.right, key, value))
     else:  # key == node.key
         if node.value == value:
             return node
-        return transform(node, value=value)
+        return node.transform(value=value)
 
 
 def find_max(node: Node) -> Node:
@@ -84,9 +77,9 @@ def remove(node: Node, key) -> Node:
     if node is None:
         raise KeyError(f'Key not found: {key}')
     elif key < node.key:
-        return transform(node, left=remove(node.left, key))
+        return node.transform(left=remove(node.left, key))
     elif key > node.key:
-        return transform(node, right=remove(node.right, key))
+        return node.transform(right=remove(node.right, key))
     else:  # key == node.key
         if node.is_leaf():
             return None
@@ -96,6 +89,5 @@ def remove(node: Node, key) -> Node:
             return node.right
         else:
             max_node = find_max(node.left)
-            return transform(max_node,
-                             left=remove(node.left, max_node.key),
-                             right=node.right)
+            return max_node.transform(left=remove(node.left, max_node.key),
+                                      right=node.right)

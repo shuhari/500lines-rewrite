@@ -104,4 +104,8 @@ Contingent
 """
 DBDB
 """
-from data_store.step00_binary_tree.tests import main; main()
+# Run tests from Step 00: binary tree
+# from data_store.step00_binary_tree.tests import main; main()
+# Run tests from Step 01: ref
+from data_store.step01_ref.tests import main; main()
+
