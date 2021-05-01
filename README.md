@@ -7,31 +7,31 @@
 
 This project is working in progress.
 
-| Project | Status | Blog Article |
-|---------|--------|--------------|
-| blockcode |  |
-| ci | Done | [rewrite-ci](https://shuhari.dev/blog/2020/06/500lines-rewrite-ci) |
+| Project | Origin Article | Blog Article | Status |
+|---------|--------|----------------|--------------|
+| blockcode |  |  |  |
+| ci | [A Continuous Integration System](http://aosabook.org/en/500L/a-continuous-integration-system.html) | [rewrite-ci](https://shuhari.dev/blog/2020/06/500lines-rewrite-ci) | Done |
 | cluster |  |
-| contingent | Done | [rewrite-contingent](https://shuhari.dev/blog/2021/02/500lines-rewrite-contingent) |
+| contingent | [Contingent: A Fully Dynamic Build System](http://aosabook.org/en/500L/contingent-a-fully-dynamic-build-system.html) | [rewrite-contingent](https://shuhari.dev/blog/2021/02/500lines-rewrite-contingent) | Done |
 | crawler |  |
 | dagoba |  |
-| data-store |  |
+| data-store | [DBDB: Dog Bed Database](http://aosabook.org/en/500L/dbdb-dog-bed-database.html) |  | Working |
 | editorial |  |
 | event-web-framework |  |
 | flow-shop |  |
 | functionaldb |  |
 | image-filters |  |
-| interpreter |  Done | [rewrite-interpreter](https://shuhari.dev/blog/2020/12/500lines-rewrite-interpreter) |
+| interpreter |  [A Python Interpreter Written in Python](http://aosabook.org/en/500L/a-python-interpreter-written-in-python.html) | [rewrite-interpreter](https://shuhari.dev/blog/2020/12/500lines-rewrite-interpreter) | Done |
 | modeller |  |
-| objmodel | Done | [rewrite-objmodel](https://shuhari.dev/blog/2020/06/500lines-rewrite-objmodel) |
+| objmodel | [A Simple Object Model](http://aosabook.org/en/500L/a-simple-object-model.html) | [rewrite-objmodel](https://shuhari.dev/blog/2020/06/500lines-rewrite-objmodel) | Done |
 | ocr |  |
 | pedometer |  |
 | same-origin-policy |  |
 | sampler |  |
 | spreadsheet |  |
-| static analysis | Done | [rewrite-static-analysis](https://shuhari.dev/blog/2020/07/500lines-rewrite-static-analysis) |
-| templating engine | Done | [rewrite-template-engine](https://shuhari.dev/blog/2020/05/500lines-rewrite-template-engine) |
-| web-server | Done | [rewrite-web-server](https://shuhari.dev/blog/2020/05/500lines-rewrite-web-server) |
+| static analysis | [Static Analysis](http://aosabook.org/en/500L/static-analysis.html) | [rewrite-static-analysis](https://shuhari.dev/blog/2020/07/500lines-rewrite-static-analysis) | Done |
+| templating engine | [A Template Engine](http://aosabook.org/en/500L/a-template-engine.html) | [rewrite-template-engine](https://shuhari.dev/blog/2020/05/500lines-rewrite-template-engine) | Done |
+| web-server | [A Simple Web Server](http://aosabook.org/en/500L/a-simple-web-server.html) | [rewrite-web-server](https://shuhari.dev/blog/2020/05/500lines-rewrite-web-server) | Done |
 
 
 <a name="english-readme"/>
