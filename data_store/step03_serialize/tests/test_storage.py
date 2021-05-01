@@ -26,6 +26,15 @@ class MemoryStorageTest(TestCase):
         self.storage.set_root_addr(addr)
         self.assertEqual(addr, self.storage.root_addr)
 
+    def test_copy(self):
+        data = {'k': 'v'}
+        addr = self.storage.write_data(data)
+        self.storage.set_root_addr(addr)
+
+        copy = self.storage.copy()
+        self.assertEqual(addr, copy.root_addr)
+        self.assertEqual(data, copy.read_data(addr))
+
 
 class FileStorageTest(TestCase):
     def setUp(self):

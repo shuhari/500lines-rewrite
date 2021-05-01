@@ -29,7 +29,7 @@ class Storage:
 
     def flush(self):
         self._f.flush()
-
+        
     def set_root_addr(self, addr: int):
         self.root_addr = addr
         self.write_int(OFFSET_ROOT, addr)
@@ -69,9 +69,20 @@ class Storage:
         return pickle.load(self._f)
 
 
+class MemoryStorage(Storage):
+    def __init__(self, data: bytes = None):
+        if data:
+            super().__init__(BytesIO(data), is_new=False)
+        else:
+            super().__init__(BytesIO(), is_new=True)
+
+    def copy(self):
+        return MemoryStorage(self._f.getvalue())
+
+
 def memory() -> Storage:
     """create memory based storage"""
-    return Storage(BytesIO(), is_new=True)
+    return MemoryStorage()
 
 
 def file(file_name: str) -> Storage:

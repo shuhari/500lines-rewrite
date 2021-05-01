@@ -1,12 +1,41 @@
 import random
 from unittest import TestCase
 
-from ..binary_tree import BinaryTree
+from ..binary_tree import ValueRef, NodeRef, Node, BinaryTree
+from .. import storage
+
+
+class NodeRefTest(TestCase):
+    def test_none_false(self):
+        self.assertFalse(NodeRef.none)
+
+
+class NodeTest(TestCase):
+    def test_is_leaf(self):
+        tree = BinaryTree(storage.memory())
+        node1 = tree.create_node('k1', 'v1')
+        self.assertTrue(node1.is_leaf())
+
+        node2 = tree.create_node('k2', 'v2', left=node1)
+        self.assertFalse(node2.is_leaf())
+
+    def test_serialize_deserialize(self):
+        node = Node(key='k',
+                    value_ref=ValueRef(addr=1),
+                    left_ref=NodeRef(addr=2),
+                    right_ref=NodeRef(addr=3))
+        data = node.serialize()
+
+        deseralized = Node.deserialize(data)
+        self.assertEqual('k', deseralized.key)
+        self.assertEqual(1, deseralized.value_ref.addr)
+        self.assertEqual(2, deseralized.left_ref.addr)
+        self.assertEqual(3, deseralized.right_ref.addr)
 
 
 class BinaryTreeTest(TestCase):
     def setUp(self):
-        self.tree = BinaryTree()
+        self.tree = BinaryTree(storage.memory())
 
     def expect_key_error(self, key):
         with self.assertRaises(KeyError):
@@ -74,3 +103,15 @@ class BinaryTreeTest(TestCase):
         self.expect_key_error('b')
         self.assertEqual([1, 3, 4],
                          [self.tree.get('a'), self.tree.get('c'), self.tree.get('d')])
+
+
+class BinaryTreeSerializeTest(TestCase):
+    def test_no_node(self):
+        save_store = storage.memory()
+        tree = BinaryTree(save_store)
+        tree.commit()
+
+        load_store = save_store.clone()
+        tree = BinaryTree(load_store)
+        self.assertIsNone(tree._root)
+

@@ -12,7 +12,6 @@ INT_FORMAT = '<Q'
 
 
 class Storage:
-    """Save/load data from file-like storage, including memory/file"""
     def __init__(self, f, is_new: bool):
         self._f = f
         if is_new:
@@ -26,9 +25,6 @@ class Storage:
         if self._f:
             self._f.close()
             self._f = None
-
-    def flush(self):
-        self._f.flush()
 
     def set_root_addr(self, addr: int):
         self.root_addr = addr
@@ -52,7 +48,7 @@ class Storage:
 
     def write_data(self, data) -> int:
         """
-        Use pickle to save data, and update free address
+        Use pickle to save data.
         :return address of data
         """
         data_addr = self.free_addr

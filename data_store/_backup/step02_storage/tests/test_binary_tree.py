@@ -1,7 +1,22 @@
 import random
 from unittest import TestCase
 
-from ..binary_tree import BinaryTree
+from ..binary_tree import ValueRef, NodeRef, Node, BinaryTree
+
+
+class NodeRefTest(TestCase):
+    def test_none_false(self):
+        self.assertFalse(NodeRef.none)
+
+
+class NodeTest(TestCase):
+    def test_is_leaf(self):
+        tree = BinaryTree()
+        node1 = tree.create_node('k1', 'v1')
+        self.assertTrue(node1.is_leaf())
+
+        node2 = tree.create_node('k2', 'v2', left=node1)
+        self.assertFalse(node2.is_leaf())
 
 
 class BinaryTreeTest(TestCase):

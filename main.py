@@ -109,5 +109,7 @@ DBDB
 # Run tests from Step 01: ref
 # from data_store.step01_ref.tests import main; main()
 # Run tests from Step 02: storage
-from data_store.step02_storage.tests import main; main()
+# from data_store.step02_storage.tests import main; main()
+# Run tests from Step 03: serialize
+from data_store.step03_serialize.tests import main; main()
 

@@ -2,56 +2,58 @@ MISSING = object()
 ADDR_NONE = 0
 
 
-class ValueRef:
-    def __init__(self, addr=ADDR_NONE, value=None):
+class Ref:
+    def __init__(self, addr=ADDR_NONE, target=MISSING):
+        assert isinstance(addr, int)
         self.addr = addr
-        self.value = value
+        self.target = target
+
+    def is_commited(self) -> bool:
+        return self.addr != ADDR_NONE
+
+    def is_loaded(self) -> bool:
+        return self.target is not MISSING
 
     def get(self):
-        return self.value
-
-    def transform(self, new_value=MISSING):
-        return self if new_value is MISSING else ValueRef(value=new_value)
+        assert self.is_loaded()
+        return self.target
 
 
-class NodeRef:
-    def __init__(self, addr=ADDR_NONE, node=None):
-        self.addr = addr
-        self.node = node
-
-    def __bool__(self):
-        return (self.addr != ADDR_NONE) or (self.node is not None)
-
-    def get(self):
-        return self.node
-
-    def transform(self, node=MISSING):
-        return self if node is MISSING else NodeRef(node=node)
+class ValueRef(Ref):
+    @classmethod
+    def transform(cls, current, new_value):
+        return current if new_value is MISSING else cls(target=new_value)
 
 
-NodeRef.none = NodeRef()
+class NodeRef(Ref):
+    @classmethod
+    def transform(cls, current, new_node):
+        return current if new_node is MISSING else cls(target=new_node)
 
 
 class Node:
     """Node of binary tree"""
-    def __init__(self, key, value_ref, left_ref=None, right_ref=None):
+    def __init__(self, key, value_ref: ValueRef, left_ref: NodeRef = None, right_ref: NodeRef = None):
         assert isinstance(value_ref, ValueRef)
         assert left_ref is None or isinstance(left_ref, NodeRef)
         assert right_ref is None or isinstance(right_ref, NodeRef)
         self.key = key
         self.value_ref = value_ref
-        self.left_ref = left_ref or NodeRef.none
-        self.right_ref = right_ref or NodeRef.none
+        self.left_ref = left_ref
+        self.right_ref = right_ref
 
     def is_leaf(self) -> bool:
-        return not self.left_ref and not self.right_ref
+        return (self.left is None) and (self.right is None)
 
     def transform(self, value=MISSING, left=MISSING, right=MISSING):
         """create new node based on current"""
+        value = self.value if value is MISSING else value
+        left = self.left if left is MISSING else left
+        right = self.right if right is MISSING else right
         return Node(self.key,
-                    value_ref=self.value_ref.transform(value),
-                    left_ref=self.left_ref.transform(left),
-                    right_ref=self.right_ref.transform(right))
+                    value_ref=ValueRef.transform(self.value_ref, value),
+                    left_ref=NodeRef.transform(self.left_ref, left),
+                    right_ref=NodeRef.transform(self.right_ref, right))
 
     @property
     def value(self):
@@ -59,35 +61,44 @@ class Node:
 
     @property
     def left(self):
-        return self.left_ref.get()
+        return self.left_ref.get() if self.left_ref else None
 
     @property
     def right(self):
-        return self.right_ref.get()
+        return self.right_ref.get() if self.right_ref else None
+
+    @classmethod
+    def create(cls, key, value):
+        return cls(key=key,
+                   value_ref=ValueRef(target=value))
 
 
 class BinaryTree:
     def __init__(self):
-        self._root = None
+        self._root_ref = None
+
+    @property
+    def root_node(self):
+        return self._root_ref.get() if self._root_ref else None
+
+    @root_node.setter
+    def root_node(self, value):
+        if value == self.root_node:
+            return
+        self._root_ref = NodeRef(target=value) if value else None
 
     def get(self, key):
-        node = find(self._root, key)
+        node = find(self.root_node, key)
         return node.value
 
     def set(self, key, value):
-        self._root = insert(self, self._root, key, value)
+        self.root_node = insert(self.root_node, key, value)
 
     def delete(self, key):
-        self._root = remove(self._root, key)
-
-    def create_node(self, key, value, left=None, right=None) -> Node:
-        return Node(key=key,
-                    value_ref=ValueRef(value=value),
-                    left_ref=NodeRef(left) if left else None,
-                    right_ref=NodeRef(right) if right else None)
+        self.root_node = remove(self.root_node, key)
 
 
-def find(node: Node, key) -> Node:
+def find(node, key) -> Node:
     if node is None:
         raise KeyError(f'Key not found: {key}')
     elif node.key == key:
@@ -98,13 +109,13 @@ def find(node: Node, key) -> Node:
         return find(node.right, key)
 
 
-def insert(tree: BinaryTree, node: Node, key, value) -> Node:
+def insert(node: Node, key, value) -> Node:
     if not node:
-        return tree.create_node(key, value)
+        return Node.create(key, value)
     elif key < node.key:
-        return node.transform(left=insert(tree, node.left, key, value))
+        return node.transform(left=insert(node.left, key, value))
     elif key > node.key:
-        return node.transform(right=insert(tree, node.right, key, value))
+        return node.transform(right=insert(node.right, key, value))
     else:  # key == node.key
         if node.value == value:
             return node

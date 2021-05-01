@@ -1,6 +1,6 @@
 import unittest
 
-from .test_binary_tree import BinaryTreeTest
+from .test_binary_tree import NodeRefTest, NodeTest, BinaryTreeTest
 
 
 def main():
