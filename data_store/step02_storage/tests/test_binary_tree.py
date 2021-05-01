@@ -2,11 +2,12 @@ import random
 from unittest import TestCase
 
 from ..binary_tree import BinaryTree
+from .. import storage
 
 
 class BinaryTreeTest(TestCase):
     def setUp(self):
-        self.tree = BinaryTree()
+        self.tree = BinaryTree(storage.memory())
 
     def expect_key_error(self, key):
         with self.assertRaises(KeyError):

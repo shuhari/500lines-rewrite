@@ -14,6 +14,9 @@ class Ref:
     def transform(cls, current, data, key):
         return cls(target=data[key]) if key in data else current
 
+    def __str__(self):
+        return f'{self.__class__.__name__}(addr={self.addr}, target={self.target}))'
+
     def get(self):
         assert self.has_value()
         return self.target
@@ -133,9 +136,10 @@ class BinaryTree(NodeManager):
     def __init__(self, storage):
         self._storage = storage
         self._root_ref = None
-        self.load_root()
+        self.reload_root()
 
-    def load_root(self):
+    def reload_root(self):
+        self._storage.reload()
         root_addr = self._storage.root_addr
         if root_addr == ADDR_NONE:
             self._root_ref = None
@@ -184,9 +188,10 @@ class BinaryTree(NodeManager):
         ref.addr = self._storage.write_data(node.serialize())
 
     def commit_value_ref(self, ref: ValueRef):
-        assert ref and ref.has_value()
+        assert ref
         if ref.has_addr():
             return
+        assert ref.has_value()
         ref.addr = self._storage.write_data(ref.get())
 
     def _insert(self, node: Node, key, value) -> Node:

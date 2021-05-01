@@ -3,7 +3,10 @@ import pickle
 import struct
 from io import BytesIO
 
+import portalocker
+
 from .binary_tree import ADDR_NONE
+
 
 SIZE_INT = 8
 OFFSET_ROOT, OFFSET_FREE = 0, SIZE_INT
@@ -15,12 +18,16 @@ class Storage:
     """Save/load data from file-like storage, including memory/file"""
     def __init__(self, f, is_new: bool):
         self._f = f
+        self.locked = False
         if is_new:
             self.set_root_addr(ADDR_NONE)
             self.set_free_addr(ADDR_FREE_START)
         else:
-            self.root_addr = self.read_int(OFFSET_ROOT)
-            self.free_addr = self.read_int(OFFSET_FREE)
+            self.reload()
+
+    def reload(self):
+        self.root_addr = self.read_int(OFFSET_ROOT)
+        self.free_addr = self.read_int(OFFSET_FREE)
 
     def close(self):
         if self._f:
@@ -67,6 +74,16 @@ class Storage:
         """
         self.seek(addr)
         return pickle.load(self._f)
+
+    def lock(self):
+        if not self.locked:
+            portalocker.lock(self._f, portalocker.LOCK_EX)
+            self.locked = True
+
+    def unlock(self):
+        if self.locked:
+            portalocker.unlock(self._f)
+            self.locked = False
 
 
 class MemoryStorage(Storage):

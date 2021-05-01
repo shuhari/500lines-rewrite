@@ -13,6 +13,11 @@ class MemoryStorageTest(TestCase):
         self.assertEqual(storage.ADDR_NONE, self.storage.root_addr)
         self.assertEqual(storage.ADDR_FREE_START, self.storage.free_addr)
 
+    def test_root_addr(self):
+        addr = 123
+        self.storage.set_root_addr(addr)
+        self.assertEqual(addr, self.storage.root_addr)
+
     def test_write_read_data(self):
         data = {'key': 'k', 'addr': 1}
         addr = self.storage.write_data(data)
@@ -20,20 +25,6 @@ class MemoryStorageTest(TestCase):
 
         read_data = self.storage.read_data(addr)
         self.assertEqual(data, read_data)
-
-    def test_root_addr(self):
-        addr = 123
-        self.storage.set_root_addr(addr)
-        self.assertEqual(addr, self.storage.root_addr)
-
-    def test_copy(self):
-        data = {'k': 'v'}
-        addr = self.storage.write_data(data)
-        self.storage.set_root_addr(addr)
-
-        copy = self.storage.copy()
-        self.assertEqual(addr, copy.root_addr)
-        self.assertEqual(data, copy.read_data(addr))
 
 
 class FileStorageTest(TestCase):

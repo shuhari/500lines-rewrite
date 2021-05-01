@@ -1,6 +1,3 @@
-MISSING = object()
-
-
 class Node:
     """Node of binary tree"""
     def __init__(self, key, value, left=None, right=None):
@@ -12,12 +9,12 @@ class Node:
     def is_leaf(self) -> bool:
         return (self.left is None) and (self.right is None)
 
-    def transform(self, value=MISSING, left=MISSING, right=MISSING):
+    def transform(self, **kwargs):
         """create new node based on current"""
-        value = self.value if value is MISSING else value
-        left = self.left if left is MISSING else left
-        right = self.right if right is MISSING else right
-        return Node(self.key, value=value, left=left, right=right)
+        return Node(self.key,
+                    value=kwargs.get('value', self.value),
+                    left=kwargs.get('left', self.left),
+                    right=kwargs.get('right', self.right))
 
 
 class BinaryTree:
@@ -44,7 +41,6 @@ def find(node, key) -> Node:
         return find(node.left, key)
     else:  # key > node.key
         return find(node.right, key)
-
 
 
 def insert(node: Node, key, value) -> Node:
