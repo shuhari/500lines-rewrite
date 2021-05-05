@@ -52,8 +52,6 @@ def main(argv):
         ops[op](db, *argv[2:])
         return 0
     except (SyntaxError, TypeError):
-        import traceback
-        traceback.print_exc()
         usage()
         return -1
 

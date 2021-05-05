@@ -15,7 +15,7 @@ This project is working in progress.
 | contingent | [Contingent: A Fully Dynamic Build System](http://aosabook.org/en/500L/contingent-a-fully-dynamic-build-system.html) | [rewrite-contingent](https://shuhari.dev/blog/2021/02/500lines-rewrite-contingent) | Done |
 | crawler |  |
 | dagoba |  |
-| data-store | [DBDB: Dog Bed Database](http://aosabook.org/en/500L/dbdb-dog-bed-database.html) |  | Working |
+| data-store | [DBDB: Dog Bed Database](http://aosabook.org/en/500L/dbdb-dog-bed-database.html) | [rewrite-dbdb](https://shuhari.dev/blog/2021/05/500lines-rewrite-dbdb) | Done |
 | editorial |  |
 | event-web-framework |  |
 | flow-shop |  |
