@@ -114,3 +114,9 @@ DBDB
 # from data_store.step03_serialize.tests import main; main()
 # Run tests from Step 04: db
 # from data_store.step04_db.tests import main; main()
+
+"""
+Flow shop
+"""
+# Run tests from Step 00: read file
+from flow_shop.step00_reader.tests import main; main()
