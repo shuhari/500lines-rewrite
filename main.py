@@ -119,4 +119,6 @@ DBDB
 Flow shop
 """
 # Run tests from Step 00: read file
-from flow_shop.step00_reader.tests import main; main()
+# from flow_shop.step00_reader.tests import main; main()
+# Run Step 01: plan
+from flow_shop.step01_plan.plan import main; main()
