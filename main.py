@@ -120,6 +120,8 @@ Flow shop
 """
 # Run tests from Step 00: read file
 # from flow_shop.step00_reader.tests import main; main()
+# Run tests from Step 01: plan
+# from flow_shop.step01_plan.tests import main; main()
 # Run Step 01: plan
 # from flow_shop.step01_plan.plan import main; main()
 # Run Step 02: strategies

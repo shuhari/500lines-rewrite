@@ -1,6 +1,7 @@
 import unittest
 
 from .test_reader import ReaderTest
+from .test_plan import PlanTest
 
 
 def main():
