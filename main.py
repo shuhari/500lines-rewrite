@@ -129,5 +129,9 @@ Flow shop
 # Run Step 03: more strategies
 # from flow_shop.step03_more_strategies import main; main()
 # Run Step 04: pick strategy
-from flow_shop.step04_pick_strategy import main; main()
+# from flow_shop.step04_pick_strategy import main; main()
+# Run tests in Step 05: caching
+# from flow_shop.step05_caching.tests import main; main()
+# Run Step 05: caching
+# from flow_shop.step05_caching import main; main()
 
