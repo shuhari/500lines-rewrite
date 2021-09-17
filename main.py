@@ -123,4 +123,8 @@ Flow shop
 # Run Step 01: plan
 # from flow_shop.step01_plan.plan import main; main()
 # Run Step 02: strategies
-from flow_shop.step02_strategies import main; main()
+# from flow_shop.step02_strategies import main; main()
+# Run tests from Step 03: more strategies
+# from flow_shop.step03_more_strategies.tests import main; main()
+# Run Step 03: more strategies
+from flow_shop.step03_more_strategies import main; main()
