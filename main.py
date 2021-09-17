@@ -127,4 +127,7 @@ Flow shop
 # Run tests from Step 03: more strategies
 # from flow_shop.step03_more_strategies.tests import main; main()
 # Run Step 03: more strategies
-from flow_shop.step03_more_strategies import main; main()
+# from flow_shop.step03_more_strategies import main; main()
+# Run Step 04: pick strategy
+from flow_shop.step04_pick_strategy import main; main()
+
