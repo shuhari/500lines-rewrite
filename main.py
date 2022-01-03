@@ -137,3 +137,11 @@ Flow shop
 # Run Step 05: caching
 # from flow_shop.step05_caching import main; main()
 
+"""
+Dagoba
+"""
+# Run tests from Step 00: database model
+# from dagoba.step00_db_model.tests import main; main()
+# Run tests from Step 01: manage primary key
+from dagoba.step01_primary_key.tests import main; main()
+
