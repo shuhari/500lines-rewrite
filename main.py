@@ -143,5 +143,6 @@ Dagoba
 # Run tests from Step 00: database model
 # from dagoba.step00_db_model.tests import main; main()
 # Run tests from Step 01: manage primary key
-from dagoba.step01_primary_key.tests import main; main()
-
+# from dagoba.step01_primary_key.tests import main; main()
+# Run tests from Step 02: eager query
+from dagoba.step02_eager_query.tests import main; main()
