@@ -1,10 +1,10 @@
 from unittest import TestCase
 
 from ..dagoba import Dagoba
-from .utils import TestMixin
+from . import fixtures
 
 
-class DbModelTest(TestCase, TestMixin):
+class DbModelTest(TestCase, fixtures.TestMixin):
 
     nodes = [
         {'_id': 1, 'name': 'foo'},

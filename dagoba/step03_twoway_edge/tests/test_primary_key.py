@@ -1,10 +1,10 @@
 from unittest import TestCase
 
 from ..dagoba import Dagoba
-from .utils import TestMixin
+from . import fixtures
 
 
-class PrimaryKeyTest(TestCase, TestMixin):
+class PrimaryKeyTest(TestCase, fixtures.TestMixin):
     def setUp(self):
         self.db = Dagoba()
         self.pk1 = self.db.add_node({'name': 'foo'})

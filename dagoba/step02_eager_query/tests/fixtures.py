@@ -11,4 +11,3 @@ class TestMixin:
         item = self.get_item(items, **attrs)
         self.assertIsNotNone(item, f'item with attrs({attrs}) not found')
 
-

@@ -7,30 +7,30 @@
 
 This project is working in progress.
 
-| Project | Language | Origin Article | Blog Article | Status |
-|---------|----------|----------------|--------------|--------|
+| Project | Origin Language | Origin Article | Rewrite Language |Rewrite Article | Status |
+|---------|-----------------|----------------|------------------|----------------|--------|
 | blockcode | Javascript | [Blockcode: A visual programming toolkit](http://aosabook.org/en/500L/blockcode-a-visual-programming-toolkit.html) |  |  |
-| ci | Python | [A Continuous Integration System](http://aosabook.org/en/500L/a-continuous-integration-system.html) | [rewrite-ci](https://shuhari.dev/blog/2020/06/500lines-rewrite-ci) | Done |
+| ci | Python | [A Continuous Integration System](http://aosabook.org/en/500L/a-continuous-integration-system.html) | Python | [rewrite-ci](https://shuhari.dev/blog/2020/06/500lines-rewrite-ci) | Done |
 | cluster | Python | [Clustering by Consensus](http://aosabook.org/en/500L/clustering-by-consensus.html) |  |  |  |
-| contingent | Python | [Contingent: A Fully Dynamic Build System](http://aosabook.org/en/500L/contingent-a-fully-dynamic-build-system.html) | [rewrite-contingent](https://shuhari.dev/blog/2021/02/500lines-rewrite-contingent) | Done |
+| contingent | Python | [Contingent: A Fully Dynamic Build System](http://aosabook.org/en/500L/contingent-a-fully-dynamic-build-system.html) |Python | [rewrite-contingent](https://shuhari.dev/blog/2021/02/500lines-rewrite-contingent) | Done |
 | crawler | Python | [A Web Crawler With asyncio Coroutines](http://aosabook.org/en/500L/a-web-crawler-with-asyncio-coroutines.html) |  |  |  |
-| dagoba | Javascript | [Dagoba: an in-memory graph database](http://aosabook.org/en/500L/dagoba-an-in-memory-graph-database.html) |  |  |  |
-| data-store | Python | [DBDB: Dog Bed Database](http://aosabook.org/en/500L/dbdb-dog-bed-database.html) | [rewrite-dbdb](https://shuhari.dev/blog/2021/05/500lines-rewrite-dbdb) | Done |
+| dagoba | Javascript | [Dagoba: an in-memory graph database](http://aosabook.org/en/500L/dagoba-an-in-memory-graph-database.html) | Python | | Working |
+| data-store | Python | [DBDB: Dog Bed Database](http://aosabook.org/en/500L/dbdb-dog-bed-database.html) | Python | [rewrite-dbdb](https://shuhari.dev/blog/2021/05/500lines-rewrite-dbdb) | Done |
 | event-web-framework | LISP | [An Event-Driven Web Framework](http://aosabook.org/en/500L/an-event-driven-web-framework.html) |  |  |
-| flow-shop | Python | [A Flow Shop Scheduler](http://aosabook.org/en/500L/a-flow-shop-scheduler.html) | [rewrite-flowshop](https://shuhari.dev/blog/2021/09/500lines-rewrite-flowshop) | Done |
+| flow-shop | Python | [A Flow Shop Scheduler](http://aosabook.org/en/500L/a-flow-shop-scheduler.html) | Python| [rewrite-flowshop](https://shuhari.dev/blog/2021/09/500lines-rewrite-flowshop) | Done |
 | functionaldb | Clojure | [An Archaeology-Inspired Database](http://aosabook.org/en/500L/an-archaeology-inspired-database.html) |  |  |
 | image-filters | Processing | [Making Your Own Image Filters](http://aosabook.org/en/500L/making-your-own-image-filters.html) |  |  |
-| interpreter | Python | [A Python Interpreter Written in Python](http://aosabook.org/en/500L/a-python-interpreter-written-in-python.html) | [rewrite-interpreter](https://shuhari.dev/blog/2020/12/500lines-rewrite-interpreter) | Done |
+| interpreter | Python | [A Python Interpreter Written in Python](http://aosabook.org/en/500L/a-python-interpreter-written-in-python.html) | Python | [rewrite-interpreter](https://shuhari.dev/blog/2020/12/500lines-rewrite-interpreter) | Done |
 | modeller | Python | [A 3D Modeller](http://aosabook.org/en/500L/a-3d-modeller.html) |  |  |
-| objmodel | Python | [A Simple Object Model](http://aosabook.org/en/500L/a-simple-object-model.html) | [rewrite-objmodel](https://shuhari.dev/blog/2020/06/500lines-rewrite-objmodel) | Done |
+| objmodel | Python | [A Simple Object Model](http://aosabook.org/en/500L/a-simple-object-model.html) | Python | [rewrite-objmodel](https://shuhari.dev/blog/2020/06/500lines-rewrite-objmodel) | Done |
 | ocr | Python | [Optical Character Recognition (OCR)](http://aosabook.org/en/500L/optical-character-recognition-ocr.html) |  |  |
 | pedometer | Ruby | [A Pedometer in the Real World](http://aosabook.org/en/500L/a-pedometer-in-the-real-world.html) |  |  |
 | same-origin-policy | Alloy | [The Same-Origin Policy](http://aosabook.org/en/500L/the-same-origin-policy.html) |  |  |
 | sampler | Python | [A Rejection Sampler](http://aosabook.org/en/500L/a-rejection-sampler.html) |  |  |
 | spreadsheet | Javascript | [Web Spreadsheet](http://aosabook.org/en/500L/web-spreadsheet.html) |  |  |
-| static analysis | Julia | [Static Analysis](http://aosabook.org/en/500L/static-analysis.html) | [rewrite-static-analysis](https://shuhari.dev/blog/2020/07/500lines-rewrite-static-analysis) | Done |
-| templating engine | Python | [A Template Engine](http://aosabook.org/en/500L/a-template-engine.html) | [rewrite-template-engine](https://shuhari.dev/blog/2020/05/500lines-rewrite-template-engine) | Done |
-| web-server | Python | [A Simple Web Server](http://aosabook.org/en/500L/a-simple-web-server.html) | [rewrite-web-server](https://shuhari.dev/blog/2020/05/500lines-rewrite-web-server) | Done |
+| static analysis | Julia | [Static Analysis](http://aosabook.org/en/500L/static-analysis.html) | Python | [rewrite-static-analysis](https://shuhari.dev/blog/2020/07/500lines-rewrite-static-analysis) | Done |
+| templating engine | Python | [A Template Engine](http://aosabook.org/en/500L/a-template-engine.html) | Python | [rewrite-template-engine](https://shuhari.dev/blog/2020/05/500lines-rewrite-template-engine) | Done |
+| web-server | Python | [A Simple Web Server](http://aosabook.org/en/500L/a-simple-web-server.html) | Python | [rewrite-web-server](https://shuhari.dev/blog/2020/05/500lines-rewrite-web-server) | Done |
 
 
 <a name="english-readme"/>

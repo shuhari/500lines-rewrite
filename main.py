@@ -147,5 +147,10 @@ Dagoba
 # Run tests from Step 02: eager query
 # from dagoba.step02_eager_query.tests import main; main()
 # Run tests from Step 03: two-way edge
-from dagoba.step03_twoway_edge.tests import main; main()
-
+# from dagoba.step03_twoway_edge.tests import main; main()
+# Run tests from Step 04: lazy query
+# from dagoba.step04_lazy_query.tests import main; main()
+# Run tests from Step 05: node visits
+# from dagoba.step05_node_visits.tests import main; main()
+# Run tests from Step 06: custom pipeline
+from dagoba.step06_custom_pipeline.tests import main; main()
