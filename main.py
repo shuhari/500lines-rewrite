@@ -141,7 +141,7 @@ Flow shop
 Dagoba
 """
 # Run tests from Step 00: database model
-# from dagoba.step00_db_model.tests import main; main()
+from dagoba.step00_db_model.tests import main; main()
 # Run tests from Step 01: manage primary key
 # from dagoba.step01_primary_key.tests import main; main()
 # Run tests from Step 02: eager query
@@ -153,4 +153,4 @@ Dagoba
 # Run tests from Step 05: node visits
 # from dagoba.step05_node_visits.tests import main; main()
 # Run tests from Step 06: custom pipeline
-from dagoba.step06_custom_pipeline.tests import main; main()
+# from dagoba.step06_custom_pipeline.tests import main; main()

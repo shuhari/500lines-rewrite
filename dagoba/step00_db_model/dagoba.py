@@ -14,7 +14,8 @@ class Dagoba:
         pk = node.get('_id', None)
         if pk in self._nodes_by_id:
             raise ValueError(f'Node with _id={pk} already exists.')
-        self._nodes.append(node.copy())
+        node = node.copy()
+        self._nodes.append(node)
         self._nodes_by_id[pk] = node
 
     def add_edge(self, edge):
