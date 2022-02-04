@@ -17,14 +17,6 @@ class DbModelTest(TestCase, fixtures.TestMixin):
     def setUp(self):
         self.db = Dagoba(self.nodes, self.edges)
 
-    # def assert_has(self, elems, **attrs):
-    #     for elem in elems:
-    #         for k, v in attrs.items():
-    #             if elem.get(k, None) != v:
-    #                 continue
-    #         return True
-    #     self.fail(f'element with attrs({attrs}) not found')
-
     def test_nodes(self):
         nodes = list(self.db.nodes())
         self.assertEqual(2, len(nodes))
