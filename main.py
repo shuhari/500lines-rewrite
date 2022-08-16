@@ -154,3 +154,9 @@ Dagoba
 # from dagoba.step05_node_visits.tests import main; main()
 # Run tests from Step 06: custom pipeline
 # from dagoba.step06_custom_pipeline.tests import main; main()
+
+"""
+3D Modeller
+"""
+# ref
+from modeller.common.code import main; main()
