@@ -651,3 +651,9 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+"""
+HACK: download freeglut from https://transmissionzero.co.uk/software/freeglut-devel/
+linux users can install freeglut3-dev package
+track glut dll name at: venv/lib/site-packages/OpenGL/platform/win32.py
+"""
