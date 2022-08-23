@@ -563,7 +563,7 @@ class Viewer(object):
         glPushMatrix()
         glLoadIdentity()
         loc = self.interaction.translation
-        # print('loc:', loc)
+        print('loc:', loc)
         glTranslated(loc[0], loc[1], loc[2])
         tb_mat = self.interaction.trackball.matrix
         print('trackball matrix 0:', tb_mat[0], tb_mat[1], tb_mat[2], tb_mat[3])
