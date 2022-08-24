@@ -163,4 +163,6 @@ Dagoba
 # Run step 00: Hello OpenGL
 # from modeller.step00_hello import main; main()
 # Run step 01: GL Window
-from modeller.step01_window import main; main()
+# from modeller.step01_window import main; main()
+# Run step 02: Shapes
+from modeller.step02_shapes import main; main()

@@ -93,12 +93,10 @@ class GLWindow:
 
     def render(self):
         # << init_view
-        xSize, ySize = glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT)
-        aspect_ratio = float(xSize) / float(ySize)
-
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
-
+        xSize, ySize = glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT)
+        aspect_ratio = float(xSize) / float(ySize)
         glViewport(0, 0, xSize, ySize)
         gluPerspective(70, aspect_ratio, 0.1, 1000.0)
         glTranslated(0, 0, -15)
@@ -117,7 +115,7 @@ class GLWindow:
 
 
 def main():
-    win = GLWindow((0, 0), (400, 400), '3D Modeller')
+    win = GLWindow((0, 0), (1024, 768), '3D Modeller')
     win.main_loop()
 
 
