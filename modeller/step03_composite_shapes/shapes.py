@@ -6,7 +6,7 @@ from OpenGL.GLU import *
 from OpenGL.GLUT import *
 
 
-__all__ = ['Shape', 'Plane', 'Sphere', 'Cube', 'define_shapes']
+__all__ = ['Shape', 'Plane', 'Sphere', 'Cube', 'Snowball', 'define_shapes']
 
 
 class Shape:
@@ -89,6 +89,9 @@ class ActiveMixin:
     def translate(self, x, y, z):
         self.translation = np.dot(self.translation, translation([x, y, z]))
 
+    def scale(self, x, y, z):
+        self.scaling = np.dot(self.scaling, scaling([x, y, z]))
+
     def render(self):
         glPushMatrix()
         glMultMatrixf(np.transpose(self.translation))
@@ -145,6 +148,32 @@ class Cube(Primitive):
                 glVertex3f(vertices[i][j][0], vertices[i][j][1], vertices[i][j][2])
         glEnd()
         glEndList()
+
+
+class CompositeShape(Shape, ActiveMixin):
+    def __init__(self):
+        super().__init__()
+        self.children = []
+
+    def render_self(self):
+        for child in self.children:
+            child.render()
+
+
+class Snowball(CompositeShape):
+    def __init__(self):
+        super().__init__()
+        self.add_sphere((0, -0.6, 0))
+        self.add_sphere((0, 0.1, 0), (0.8, 0.8, 0.8))
+        self.add_sphere((0, 0.75, 0), (0.7, 0.7, 0.7))
+
+    def add_sphere(self, translate=None, scale=None):
+        sphere = Sphere(color_index=0)
+        if translate:
+            sphere.translate(translate[0], translate[1], translate[2])
+        if scale:
+            sphere.scale(scale[0], scale[1], scale[2])
+        self.children.append(sphere)
 
 
 def define_shapes():

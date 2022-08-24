@@ -165,4 +165,6 @@ Dagoba
 # Run step 01: GL Window
 # from modeller.step01_window import main; main()
 # Run step 02: Shapes
-from modeller.step02_shapes import main; main()
+# from modeller.step02_shapes import main; main()
+# Run step 03: Composite Shapes
+from modeller.step03_composite_shapes import main; main()
