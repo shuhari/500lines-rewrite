@@ -169,4 +169,6 @@ Dagoba
 # Run step 03: Composite Shapes
 # from modeller.step03_composite_shapes import main; main()
 # Run step 04: Input Basic
-from modeller.step04_input_basic import main; main()
+# from modeller.step04_input_basic import main; main()
+# Run step 04: Input with AABB
+from modeller.step05_input_aabb import main; main()
