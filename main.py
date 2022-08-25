@@ -173,4 +173,4 @@ Dagoba
 # Run step 05: Input with AABB
 # from modeller.step05_input_aabb import main; main()
 # Run step 06: Input using selections
-from modeller.step06_input_misc import main; main()
+# from modeller.step06_input_misc import main; main()
