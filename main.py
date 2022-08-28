@@ -158,8 +158,6 @@ Dagoba
 """
 3D Modeller
 """
-# ref
-# from modeller.common.code import main; main()
 # Run step 00: Hello OpenGL
 # from modeller.step00_hello import main; main()
 # Run step 01: GL Window
