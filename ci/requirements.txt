@@ -7,4 +7,4 @@ Jinja2==2.11.3
 MarkupSafe==1.1.1
 pycparser==2.20
 pygit2==1.2.1
-Werkzeug==1.0.1
+Werkzeug==2.2.3
