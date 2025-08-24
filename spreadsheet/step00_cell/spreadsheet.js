@@ -4,7 +4,7 @@ class Cell {
         this._input = value;
 
         let type = 'text';
-        if (!Number.isNaN(+value)) {
+        if (!Number.isNaN(parseFloat(value))) {
             type = 'number';
         }
         else if (value.length > 0 && value.charAt(0) == '=') {
